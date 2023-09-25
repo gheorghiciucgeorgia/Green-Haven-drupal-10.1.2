@@ -1,0 +1,20 @@
+//color palette
+$greenish-blue: #016A70;
+$cream: #FFFFDD;
+$mustard:#D2DE32;
+$earthy-green: #A2C579;
+$light-green: #d5f0b6;
+.header {
+    margin-top: -25px;
+    margin-bottom: 25px;
+    img{
+    width:100%;
+    object-fit: cover;
+    height: 328px;
+    }
+}
+
+.nav-bar-color{
+    background-color: $light-green;
+    color:black;
+}

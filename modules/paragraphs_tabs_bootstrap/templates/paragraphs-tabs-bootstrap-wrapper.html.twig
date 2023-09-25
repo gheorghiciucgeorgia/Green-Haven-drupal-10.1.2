@@ -1,0 +1,62 @@
+<div class="{{ class_wrapper }}">
+  {% if direction == 'horizontal' %}
+    {% if btn_add|length > 1 %}
+    <ul class="nav nav-{{ mode }}s" role="tablist" aria-orientation="{{ direction }}">
+      {% for field, nav in navigation %}
+        <li class="nav-item paragraph-item {{ nav.toggle }}" data-bs-toggle="{{ nav.toggle }}">
+          <button {{ nav.attributes }}>
+            {% if(nav.image) %}
+              {{ nav.image }}
+            {% endif %}
+            {{ nav.label }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="nav-item my-2 d-flex dropdown">
+      <input type="search" class="tab-search form-control me-2" placeholder="{{ 'Search'|t }}" />
+      {% if btn_add|length > 1 %}
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-folder-plus"></i> {{ 'Add'|t }}
+      </a>
+        <ul class="dropdown-menu">
+          {% for dropdown in btn_add %}
+            <li>{{ dropdown }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        {{ btn_add|first }}
+      {% endif %}
+    </div>
+  {% elseif direction == 'vertical' %}
+    <ul class="nav flex-column nav-{{ mode }}s me-3" role="tablist" aria-orientation="{{ direction }}">
+      <li class="nav-item my-2 d-flex dropdown">
+        <input type="search" class="tab-search form-control me-2" placeholder="{{ 'Search'|t }}" />
+        {% if btn_add|length > 1 %}
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-folder-plus"></i> {{ 'Add'|t }}
+        </a>
+          <ul class="dropdown-menu">
+            {% for dropdown in btn_add %}
+              <li>{{ dropdown }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          {{ btn_add|first }}
+        {% endif %}
+      </li>
+      {% for field, nav in navigation %}
+        <li class="nav-item paragraph-item">
+          <button {{ nav.attributes }}>
+            {% if(nav.image) %}
+              {{ nav.image }}
+            {% endif %}
+            {{ nav.label }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{{ content }}

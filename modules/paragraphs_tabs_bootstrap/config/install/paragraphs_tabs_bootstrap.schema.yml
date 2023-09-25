@@ -1,0 +1,34 @@
+giparagraphs_tabs_bootstrap_formatter:
+  type: mapping
+  label: 'Paragraphs tabs bootstrap formatter settings.'
+  mapping:
+    vertical:
+      type: boolean
+      label: 'Show in mode vertical'
+    mode:
+      type: string
+      label: 'Tab or pill'
+    empty_cell_value:
+      type: boolean
+      label: 'empty cell value'
+    empty:
+      type: string
+      label: 'Empty content or not'
+    bottom_text:
+      type: string
+      label: 'Extra text at bottom'
+    custom_class:
+      type: string
+      label: 'Custom class'
+    hide_line_operations:
+      type: string
+      label: 'Hidden buttons operations'
+    parent:
+      type: string
+      label: 'Field parent'
+    links:
+      type: string
+      label: 'Field links'
+    owner:
+      type: string
+      label: 'Field owner'

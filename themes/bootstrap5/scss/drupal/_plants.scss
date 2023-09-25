@@ -1,0 +1,16 @@
+.region-content{
+    margin: 3% 17%;
+}
+.plant-content{
+    display:flex;
+    .plant-image{
+        width: 100%;
+        margin-right:5%;
+        img{
+            border-radius: 10px;
+        }
+    }
+    .plant-details{
+        width:100%;
+    }
+}

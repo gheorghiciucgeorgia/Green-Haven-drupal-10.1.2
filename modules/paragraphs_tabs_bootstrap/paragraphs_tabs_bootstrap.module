@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Module for creating the Paragraphs Tabs format bootstrap component.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * Call the base hook from Paragraphs to allow preprocess hooks to work.
+ */
+function paragraphs_tabs_bootstrap_theme() {
+  return [
+    'paragraphs_tabs_bootstrap_wrapper' => [
+      'render element' => 'element',
+      'template' => 'paragraphs-tabs-bootstrap-wrapper',
+      'variables' => [
+        'navigation' => [],
+        'btn_add' => [],
+        'direction' => NULL,
+        'mode' => NULL,
+        'settings' => [],
+        'class_wrapper' => '',
+        'content' => '',
+      ],
+    ],
+    'paragraphs_tabs_bootstrap_content' => [
+      'render element' => 'element',
+      'template' => 'paragraphs-tabs-bootstrap-content',
+      'variables' => [
+        'content' => [],
+        'paragraph_id' => '#',
+        'header_text' => [],
+        'footer_text' => [],
+        'operation' => [],
+        'attributes' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function paragraphs_tabs_bootstrap_help($route_name) {
+  switch ($route_name) {
+    case 'help.page.paragraphs_tabs_bootstrap':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Bootstrap paragraphs tab gives users the ability to easily add paragraphs by tab groups horizontal or vertical.') . '</p>';
+      return $output;
+  }
+}

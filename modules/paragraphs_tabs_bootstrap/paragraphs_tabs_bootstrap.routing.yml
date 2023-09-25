@@ -1,0 +1,11 @@
+paragraphs.add:
+  path: '/paragraphs-tabs/add/{paragraph_type}/{entity_type}/{entity_field}/{entity_id}'
+  defaults:
+    _controller: '\Drupal\paragraphs_tabs_bootstrap\Controller\ComponentFormController::addForm'
+    operation: 'create'
+  options:
+    parameters:
+      paragraph_type:
+        type: entity:paragraphs_type
+  requirements:
+    _custom_access: '\Drupal\paragraphs_tabs_bootstrap\Controller\ParagraphAccessController::accessAdd'

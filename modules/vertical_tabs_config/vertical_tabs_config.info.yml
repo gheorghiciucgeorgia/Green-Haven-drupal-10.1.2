@@ -1,0 +1,10 @@
+name: Vertical Tabs Config
+description: 'Allows you to hide vertical tabs on add/edit node pages depending on content type and role. It also lets you to decide their order.'
+type: module
+configure: vertical_tabs_config.visibility
+core_version_requirement: ^8.7.7 || ^9 || ^10
+
+# Information added by Drupal.org packaging script on 2022-08-25
+version: '2.0.0'
+project: 'vertical_tabs_config'
+datestamp: 1661460992

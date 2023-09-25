@@ -1,0 +1,28 @@
+{%
+  set classes = [
+  'card',
+  'paragraphs-tab-content',
+  'mt-3'
+]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if header_text or operation %}
+    <div class="card-header d-flex justify-content-between">
+      <div class="card-title">#{{ paragraph_id }}</div>
+      <div>
+        {{ header_text }}
+        {{ operation }}
+      </div>
+    </div>
+  {% endif %}
+  {% block content %}
+    <div class="card-body">
+    {{ content }}
+    </div>
+  {% endblock %}
+  {% if footer_text %}
+    <div class="card-footer">
+      {{ footer_text }}
+    </div>
+  {% endif %}
+</div>

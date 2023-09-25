@@ -1,0 +1,9 @@
+.vertical-tabs-list .dropdown-menu li a img {
+  height: 24px;
+}
+.vertical-tabs-list .nav-pills button > img {
+  max-height: 47px;
+}
+.vertical-tabs-list.d-flex.show {
+  display: flex !important;
+}

@@ -1,0 +1,20 @@
+paragraphs-tabs-bootstrap:
+  version: 1.x
+  css:
+    theme:
+      css/paragraphs-tabs-bootstrap.css: {}
+  js:
+    js/paragraphs-tabs-bootstrap.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+    - core/js-cookie
+
+paragraphs-vertical-tabs-bootstrap:
+  js:
+    js/paragraphs_vertical_tabs_bootstrap.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
