@@ -205,7 +205,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
     // Test using alt attribute inside attributes.
     $image_with_alt_attribute_alt_attribute = [
       '#theme' => 'image',
-      '#uri' => '/core/themes/olivero/logo.png',
+      '#uri' => '/core/themes/olivero/logo.svg',
       '#width' => '50%',
       '#height' => '50%',
       '#attributes' => [

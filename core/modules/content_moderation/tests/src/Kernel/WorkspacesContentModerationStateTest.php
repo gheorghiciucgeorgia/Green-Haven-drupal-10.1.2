@@ -17,6 +17,7 @@ use Drupal\workspaces\WorkspacePublishException;
  *
  * @group content_moderation
  * @group workspaces
+ * @group #slow
  */
 class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
@@ -42,8 +43,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installSchema('system', ['sequences']);
 
     $this->initializeWorkspacesModule();
     $this->switchToWorkspace('stage');
@@ -257,7 +256,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     // In the context of a workspace, the default revision ID is always the
     // latest workspace-specific revision, so we need to adjust the expectation
     // of the parent assertion.
-    $revision_id = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId();
+    $revision_id = (int) $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId();
 
     // Additionally, the publishing status of the default revision is not
     // relevant in a workspace, because getting an entity to a "published"

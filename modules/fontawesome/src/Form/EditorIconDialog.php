@@ -488,8 +488,53 @@ class EditorIconDialog extends FormBase {
       }
       // Determine the icon style - brands don't allow style.
       $metadata = $this->fontAwesomeManager->getIconMetadata($item['icon_name']);
-      $item['style'] = 'fa-' . $this->fontAwesomeManager->determinePrefix($metadata['styles'], $item['settings']['style']);
+      $item['style'] = $this->fontAwesomeManager->determinePrefix($metadata['styles'], $item['settings']['style']);
       unset($item['settings']['style']);
+
+      // Determine the prefix.
+      switch ($item['style']) {
+
+        case 'brands':
+          $item['style'] = 'fa-brands';
+          break;
+
+        case 'light':
+          $item['style'] = 'fa-light';
+          break;
+
+        case 'regular':
+          $item['style'] = 'fa-regular';
+          break;
+
+        case 'duotone':
+          $item['style'] = 'fa-duotone';
+          break;
+
+        case 'thin':
+          $item['style'] = 'fa-thin';
+          break;
+
+        case 'sharpregular':
+          $item['style'] = 'fa-sharp fa-regular';
+          break;
+
+        case 'sharpsolid':
+          $item['style'] = 'fa-sharp fa-solid';
+          break;
+
+        case 'sharplight':
+          $item['style'] = 'fa-sharp fa-light';
+          break;
+
+        case 'kit_uploads':
+          $item['style'] = 'fa-kit';
+          break;
+
+        default:
+        case 'solid':
+          $item['style'] = 'fa-solid';
+          break;
+      }
 
       // Remove blank data.
       $item['settings'] = array_filter($item['settings']);

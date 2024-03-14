@@ -55,7 +55,6 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
       $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-      $this->drupalCreateContentType(['type' => 'product', 'name'=> 'Product']);
     }
 
     $this->adminUser = $this->drupalCreateUser([

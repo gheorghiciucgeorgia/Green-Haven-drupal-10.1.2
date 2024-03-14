@@ -1,4 +1,4 @@
-(function ($, Drupal, drupalSettings, once) {
+(function ($, Drupal, drupalSettings) {
   'use strict';
 
   Drupal.behaviors.iconPicker = {

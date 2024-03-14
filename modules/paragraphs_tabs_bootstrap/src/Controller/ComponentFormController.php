@@ -2,14 +2,14 @@
 
 namespace Drupal\paragraphs_tabs_bootstrap\Controller;
 
+use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormBuilder;
-use Symfony\Component\HttpFoundation\Request;
 use Drupal\paragraphs\ParagraphsTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Ajax\AjaxHelperTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class definition for ComponentFormController.

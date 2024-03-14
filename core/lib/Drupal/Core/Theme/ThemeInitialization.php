@@ -169,7 +169,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
       $values['logo'] = $theme->getPath() . '/' . $theme->info['logo'];
     }
     else {
-      $values['logo'] = $theme->getPath() . '/logo.png';
+      $values['logo'] = $theme->getPath() . '/logo.svg';
     }
 
     // Prepare libraries overrides from this theme and ancestor themes. This

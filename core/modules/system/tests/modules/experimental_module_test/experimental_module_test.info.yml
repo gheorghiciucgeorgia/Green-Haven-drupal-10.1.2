@@ -6,7 +6,7 @@ lifecycle: experimental
 lifecycle_link: https://example.com/experimental
 # version: 8.y.x-unstable
 
-# Information added by Drupal.org packaging script on 2023-08-02
-version: '10.1.2'
+# Information added by Drupal.org packaging script on 2024-03-06
+version: '10.2.4'
 project: 'drupal'
-datestamp: 1690972232
+datestamp: 1709715468

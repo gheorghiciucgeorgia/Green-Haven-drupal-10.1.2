@@ -28,7 +28,7 @@ class ImageLazyLoadController extends ControllerBase {
 
     $images['without-dimensions'] = [
       '#theme' => 'image',
-      '#uri' => '/core/themes/olivero/logo.png',
+      '#uri' => '/core/themes/olivero/logo.svg',
       '#alt' => 'Image lazy load testing image without dimensions',
       '#prefix' => '<div id="without-dimensions">',
       '#suffix' => '</div>',

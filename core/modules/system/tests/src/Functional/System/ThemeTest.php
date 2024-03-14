@@ -109,9 +109,9 @@ class ThemeTest extends BrowserTestBase {
         'src' => base_path() . 'core/misc/druplicon.png',
       ],
       // Relative path to a file in a theme.
-      $default_theme_path . '/logo.png' => [
-        'form' => $default_theme_path . '/logo.png',
-        'src' => base_path() . $default_theme_path . '/logo.ong',
+      $default_theme_path . '/logo.svg' => [
+        'form' => $default_theme_path . '/logo.svg',
+        'src' => base_path() . $default_theme_path . '/logo.svg',
       ],
     ];
     foreach ($supported_paths as $input => $expected) {
@@ -126,9 +126,9 @@ class ThemeTest extends BrowserTestBase {
 
       // Verify logo path examples.
       // Expected default values (if all else fails).
-      $implicit_public_file = 'logo.png';
-      $explicit_file = 'public://logo.png';
-      $local_file = $default_theme_path . '/logo.png';
+      $implicit_public_file = 'logo.svg';
+      $explicit_file = 'public://logo.svg';
+      $local_file = $default_theme_path . '/logo.svg';
       // Adjust for fully qualified stream wrapper URI in public filesystem.
       if (StreamWrapperManager::getScheme($input) == 'public') {
         $implicit_public_file = StreamWrapperManager::getTarget($input);
@@ -471,6 +471,7 @@ class ThemeTest extends BrowserTestBase {
    * Tests installing a theme and setting it as default.
    */
   public function testInstallAndSetAsDefault() {
+    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $themes = [
       'olivero' => 'Olivero',
       'test_core_semver' => 'Theme test with semver core version',

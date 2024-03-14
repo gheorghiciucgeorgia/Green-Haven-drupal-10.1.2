@@ -357,11 +357,11 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
    * @return string
    *   A valid prefix for this icon.
    */
-  public function determinePrefix(array $styles, $default = 'solid') {
+  public function determinePrefix(array $styles, $default = 'fas') {
     // Determine the icon style - brands behave differently.
     foreach ($styles as $style) {
       if ($style == 'brands') {
-        return 'brands';
+        return 'fab';
       }
     }
     return $default;

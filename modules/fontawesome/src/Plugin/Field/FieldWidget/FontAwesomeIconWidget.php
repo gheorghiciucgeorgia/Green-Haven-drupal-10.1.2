@@ -607,7 +607,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       }
 
       if (!empty($item['settings']['masking']['style'])) {
-        $item['settings']['masking']['style'] = isset($metadata[$item['icon_name']]['styles']) ? ('fa-' . $this->fontAwesomeManager->determinePrefix($metadata[$item['icon_name']]['styles'], $item['settings']['masking']['style'])) : 'fa-solid';
+        $item['settings']['masking']['style'] = isset($metadata[$item['icon_name']]['styles']) ? $this->fontAwesomeManager->determinePrefix($metadata[$item['icon_name']]['styles'], $item['settings']['masking']['style']) : 'fas';
       }
 
       // Massage rotate and flip values to make them format properly.
@@ -636,7 +636,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       }
       else {
         // Determine the icon style - brands don't allow style.
-        $item['style'] = isset($metadata[$item['icon_name']]['styles']) ? ('fa-' . $this->fontAwesomeManager->determinePrefix($metadata[$item['icon_name']]['styles'], $item['settings']['style'])) : 'fa-solid';
+        $item['style'] = isset($metadata[$item['icon_name']]['styles']) ? $this->fontAwesomeManager->determinePrefix($metadata[$item['icon_name']]['styles'], $item['settings']['style']) : 'fas';
       }
       unset($item['settings']['style']);
 

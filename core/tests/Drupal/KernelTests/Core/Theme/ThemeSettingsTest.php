@@ -75,7 +75,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $theme = $theme_handler->getTheme('stark');
 
     // Tests default behavior.
-    $expected = '/' . $theme->getPath() . '/logo.png';
+    $expected = '/' . $theme->getPath() . '/logo.svg';
     $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
 
     $config = $this->config('stark.settings');
