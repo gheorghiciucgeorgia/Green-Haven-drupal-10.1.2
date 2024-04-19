@@ -1,0 +1,37 @@
+{% set horizontalPosition = content.field_horizontal_position[0]['#markup'] %}
+
+{% if horizontalPosition == 'Left' %}
+  <div class="editorial-content">
+    <div class="image">{{ content.field_editorial_image }}</div>
+    <div class="text">
+      <div class="caption">
+        <h2>{{ content.field_editorial_caption }}</h2>
+      </div>
+      <div class="title">
+        <h3>{{ content.field_editorial_title }}</h3>
+      </div>
+      <div class="description">{{ content.field_editorial_description }}</div>
+      <div class="CTA" style="--clr:#39FF14">
+        <span>{{ content.field_editorial_link }}</span><i></i>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if horizontalPosition == 'Right' %}
+  <div class="editorial-content">
+      <div class="text">
+      <div class="caption">
+        <h2>{{ content.field_editorial_caption }}</h2>
+      </div>
+      <div class="title">
+        <h3>{{ content.field_editorial_title }}</h3>
+      </div>
+      <div class="description">{{ content.field_editorial_description }}</div>
+      <div class="CTA" style="--clr:#39FF14">
+        <span>{{ content.field_editorial_link }}</span><i></i>
+      </div>
+    </div>
+    <div class="image right">{{ content.field_editorial_image }}</div>
+  </div>
+{% endif %}

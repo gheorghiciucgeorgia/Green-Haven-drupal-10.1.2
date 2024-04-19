@@ -32,8 +32,7 @@
   set classes = [
     'field',
     'field--name-' ~ field_name|clean_class,
-    'field--type-' ~ field_type|clean_class,
-    'color-red'
+    'field--type-' ~ field_type|clean_class
   ]
 %}
 <span{{ attributes.addClass(classes) }}>

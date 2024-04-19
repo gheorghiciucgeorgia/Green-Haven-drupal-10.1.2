@@ -1,0 +1,18 @@
+{# Accesează doar valoarea 'Forest Green' din câmpul field_container_background_color #}
+{% set backgroundColor = content.field_container_background_color[0]['#markup'] %}
+
+{# Afișează doar valoarea 'Forest Green' în consolă pentru debug #}
+{# {{ dump(backgroundColor) }} #}
+
+{# Verifică dacă valoarea este "Forest Green" și afișează "ok" dacă este adevărat #}
+{% if backgroundColor == 'Forest Green' %}
+  <div class="forest-green">{{ content }}</div>
+{% endif %}
+
+{% if backgroundColor == 'Pastel Green' %}
+  <div class="pastel-green">{{ content }}</div>
+{% endif %}
+
+{% if backgroundColor is null %}
+  <div style="background-color:transparent;">{{ content }}</div>
+{% endif %}
