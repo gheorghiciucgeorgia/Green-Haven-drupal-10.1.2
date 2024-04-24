@@ -15,7 +15,6 @@ use Drupal\field_group\FormatterHelper;
 use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\paragraphs\ParagraphsTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class AddComponentForm.
@@ -39,27 +38,6 @@ class AddComponentForm extends FormBase {
   protected $paragraphType;
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * {@inheritDoc}
    */
   public function getFormId() {
@@ -69,11 +47,7 @@ class AddComponentForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository, ModuleHandlerInterface $module_handler, RequestStack $requestStack = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityRepository = $entity_repository;
-    $this->moduleHandler = $module_handler;
-    $this->requestStack = $requestStack;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected EntityRepositoryInterface $entityRepository, protected ModuleHandlerInterface $moduleHandler) {
   }
 
   /**
@@ -84,7 +58,6 @@ class AddComponentForm extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('entity.repository'),
       $container->get('module_handler'),
-      $container->get('request_stack')
     );
   }
 
@@ -92,11 +65,11 @@ class AddComponentForm extends FormBase {
    * {@inheritDoc}
    *
    * @param array $form
-   *   The form array.
+   *   The form arrays.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    * @param \Drupal\paragraphs\Entity\ParagraphsType $paragraph_type
-   *   The paragraph type.
+   *   The paragraph types.
    * @param string $entity_type
    *   Entity Type.
    * @param string $entity_field
@@ -158,7 +131,7 @@ class AddComponentForm extends FormBase {
         ],
       ],
     ];
-    if ($this->requestStack->getCurrentRequest()->isXmlHttpRequest()) {
+    if ($this->getRequest()->isXmlHttpRequest()) {
       $form['actions']['cancel']['#ajax'] = [
         'callback' => '::cancel',
         'progress' => 'none',
@@ -268,7 +241,7 @@ class AddComponentForm extends FormBase {
    * @param \Drupal\paragraphs\ParagraphsTypeInterface $paragraph_type
    *   The paragraph type.
    *
-   * @return \Drupal\paragraphs\ParagraphInterface
+   * @return \Drupal\Core\Entity\EntityInterface
    *   The new paragraph.
    */
   protected function newParagraph(ParagraphsTypeInterface $paragraph_type) {
@@ -325,7 +298,7 @@ class AddComponentForm extends FormBase {
    */
   public function cancel(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $this->ajaxCloseForm($response);
+    $form_state->setRebuild();
     return $response;
   }
 

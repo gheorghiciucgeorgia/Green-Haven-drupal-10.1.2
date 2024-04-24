@@ -20,17 +20,13 @@ class RouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The router service.
-   *
-   * @var \Symfony\Component\Routing\RouterInterface
    */
-  protected $routeProvider;
+  protected RouteProviderInterface $routeProvider;
 
   /**
    * Constructs a new RouteSubscriber object.

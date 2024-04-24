@@ -3,10 +3,15 @@
 namespace Drupal\paragraphs_tabs_bootstrap\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\paragraphs\Plugin\Field\FieldWidget\InlineParagraphsWidget;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'paragraphs_tabs_bootstrap_widget' widget.
@@ -21,6 +26,46 @@ use Drupal\paragraphs\Plugin\Field\FieldWidget\InlineParagraphsWidget;
  * )
  */
 class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
+
+  /**
+   * Constructor paragraphs tabs widget.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The render service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, protected EntityTypeManagerInterface $entityTypeManager, protected AccountInterface $currentUser, protected RendererInterface $renderer) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('entity_type.manager'),
+      $container->get('current_user'),
+      $container->get('renderer'),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -95,8 +140,8 @@ class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
     // widget.
     unset($widget['#theme']);
     $widget['#type'] = 'vertical_tabs';
-    $storage = \Drupal::entityTypeManager()->getStorage('paragraphs_type');
-    $style = \Drupal::entityTypeManager()->getStorage('image_style')->load('thumbnail');
+    $storage = $this->entityTypeManager->getStorage('paragraphs_type');
+    $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
 
     // Loop through each single-element form.
     foreach (Element::children($widget) as $delta) {
@@ -115,12 +160,12 @@ class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
               '#style_name' => 'thumbnail',
               '#uri' => $uri,
             ];
-            $imgIcon = \Drupal::service('renderer')->render($render);
+            $imgIcon = $this->renderer->render($render);
           }
         }
         $title = $imgIcon . $paragraphs_type->label();
-        // Transform the single-element form into a details element, with a
-        // title and a group so it can be placed into the correct vertical tabs
+        // Transform the single-element form into a details' element, with a
+        // title and a group, so it can be placed into the correct vertical tabs
         // element.
         $widget[$delta]['#type'] = 'details';
         $widget[$delta]['#title'] = $title;
@@ -130,7 +175,7 @@ class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
         // The default prefix and suffix define an HTML tag wrapper, which
         // interferes with the core/drupal.vertical-tabs library JavaScript,
         // which requires tabs to be children (i.e.: not descendants) of the
-        // vertical tabs widget.
+        // vertical tabs' widget.
         unset($widget[$delta]['#prefix']);
         unset($widget[$delta]['#suffix']);
 
@@ -164,7 +209,7 @@ class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
     // remove the default theme wrappers, remove the default "to field" suffix
     // (which ends up outside the wrapper and therefore at the top of every
     // tab), add an attribute to the add_more button so JavaScript can move it
-    // into the vertical tabs menu, and loop through each "add more" button and
+    // into the vertical tabs' menu, and loop through each "add more" button &
     // tell AJAX to replace the whole field wrapper - otherwise its wrapper
     // selector doesn't refer to anything.
     unset($widget['add_more']['#suffix']);
@@ -200,7 +245,7 @@ class ParagraphsTabsBootstrapWidget extends InlineParagraphsWidget {
         '@jquery_api_selectors' => 'https://api.jquery.com/category/selectors/',
       ]),
       '#default_value' => $this->getSetting('summary_selector'),
-      '#access' => \Drupal::currentUser()->hasPermission('change paragraphs_tabs_widget summary_selector'),
+      '#access' => $this->currentUser->hasPermission('change paragraphs_tabs_widget summary_selector'),
     ];
 
     return $elements;

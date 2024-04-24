@@ -2,7 +2,6 @@
   "name": "drupal/paragraphs_tabs_bootstrap",
   "description": "This module provides a field formatter Paragraphs type tabs bootstrap",
   "type": "drupal-module",
-  "minimum-stability": "stable",
   "homepage": "https://www.drupal.org/project/paragraphs_tabs_bootstrap",
   "support": {
     "issues": "https://www.drupal.org/project/issues/paragraphs_tabs_bootstrap",
@@ -18,7 +17,7 @@
     }
   ],
   "require": {
-    "drupal/core": "^8 || ^9 || ^10",
+    "drupal/core": "^9 || ^10 || ^11",
     "drupal/paragraphs": "~1.0"
   }
 }

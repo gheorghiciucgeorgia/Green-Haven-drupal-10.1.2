@@ -1,0 +1,8 @@
+services:
+  bootstrap_simple_carousel.carousel_service:
+    class: Drupal\bootstrap_simple_carousel\Service\CarouselService
+    arguments: ['@renderer', '@entity_type.manager']
+    autowire: true
+  logger.channel.bootstrap_simple_carousel:
+    parent: logger.channel_base
+    arguments: [ 'bootstrap_simple_carousel' ]
