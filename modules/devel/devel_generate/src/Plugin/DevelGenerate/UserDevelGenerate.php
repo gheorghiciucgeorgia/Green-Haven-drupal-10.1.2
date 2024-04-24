@@ -4,17 +4,11 @@ namespace Drupal\devel_generate\Plugin\DevelGenerate;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\devel_generate\DevelGenerateBase;
-use Drupal\user\RoleStorageInterface;
-use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,23 +31,24 @@ class UserDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
 
   /**
    * The user storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected UserStorageInterface $userStorage;
+  protected $userStorage;
 
   /**
    * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected DateFormatterInterface $dateFormatter;
+  protected $dateFormatter;
 
   /**
    * Provides system time.
+   *
+   * @var \Drupal\Core\Datetime\TimeInterface
    */
-  protected TimeInterface $time;
-
-  /**
-   * The role storage.
-   */
-  protected RoleStorageInterface $roleStorage;
+  protected $time;
 
   /**
    * Constructs a new UserDevelGenerate object.
@@ -64,69 +59,37 @@ class UserDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
-   * @param \Drupal\user\UserStorageInterface $user_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The user storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Core\Datetime\TimeInterface $time
    *   Provides system time.
-   * @param \Drupal\user\RoleStorageInterface $role_storage
-   *   The role storage.
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    MessengerInterface $messenger,
-    LanguageManagerInterface $language_manager,
-    ModuleHandlerInterface $module_handler,
-    TranslationInterface $string_translation,
-    UserStorageInterface $user_storage,
-    DateFormatterInterface $date_formatter,
-    TimeInterface $time,
-    RoleStorageInterface $role_storage
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $messenger, $language_manager, $module_handler, $string_translation);
-    $this->userStorage = $user_storage;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $entity_storage, DateFormatterInterface $date_formatter, TimeInterface $time) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->userStorage = $entity_storage;
     $this->dateFormatter = $date_formatter;
     $this->time = $time;
-    $this->roleStorage = $role_storage;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
-    $entity_type_manager = $container->get('entity_type.manager');
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration, $plugin_id, $plugin_definition,
-      $entity_type_manager,
-      $container->get('messenger'),
-      $container->get('language_manager'),
-      $container->get('module_handler'),
-      $container->get('string_translation'),
-      $entity_type_manager->getStorage('user'),
+      $container->get('entity_type.manager')->getStorage('user'),
       $container->get('date.formatter'),
-      $container->get('datetime.time'),
-      $container->get('entity_type.manager')->getStorage('user_role'),
+      $container->get('datetime.time')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state): array {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $form['num'] = [
       '#type' => 'number',
       '#title' => $this->t('How many users would you like to generate?'),
@@ -141,13 +104,13 @@ class UserDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
       '#default_value' => $this->getSetting('kill'),
     ];
 
-    $roles = array_map(fn($role): string => $role->label(), $this->roleStorage->loadMultiple());
-    unset($roles[AccountInterface::AUTHENTICATED_ROLE], $roles[AccountInterface::ANONYMOUS_ROLE]);
+    $options = user_role_names(TRUE);
+    unset($options[AccountInterface::AUTHENTICATED_ROLE]);
     $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Which roles should the users receive?'),
       '#description' => $this->t('Users always receive the <em>authenticated user</em> role.'),
-      '#options' => $roles,
+      '#options' => $options,
     ];
 
     $form['pass'] = [
@@ -176,7 +139,7 @@ class UserDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  protected function generateElements(array $values): void {
+  protected function generateElements(array $values) {
     $num = $values['num'];
     $kill = $values['kill'];
     $pass = $values['pass'];
@@ -229,14 +192,15 @@ class UserDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function validateDrushParams(array $args, array $options = []): array {
-    return [
+  public function validateDrushParams(array $args, array $options = []) {
+    $values = [
       'num' => array_shift($args),
       'time_range' => 0,
       'roles' => self::csvToArray($options['roles']),
       'kill' => $options['kill'],
       'pass' => $options['pass'],
     ];
+    return $values;
   }
 
 }

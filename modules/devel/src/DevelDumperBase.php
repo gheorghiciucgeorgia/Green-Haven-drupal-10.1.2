@@ -19,14 +19,14 @@ abstract class DevelDumperBase extends PluginBase implements DevelDumperInterfac
   /**
    * {@inheritdoc}
    */
-  public function dump($input, $name = NULL): void {
+  public function dump($input, $name = NULL) {
     echo (string) $this->export($input, $name);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function exportAsRenderable($input, $name = NULL): array {
+  public function exportAsRenderable($input, $name = NULL) {
     return ['#markup' => $this->export($input, $name)];
   }
 
@@ -52,11 +52,11 @@ abstract class DevelDumperBase extends PluginBase implements DevelDumperInterfac
    * @return array
    *   An array of internal functions.
    */
-  protected function getInternalFunctions(): array {
-    $class_name = static::class;
+  protected function getInternalFunctions() {
+    $class_name = get_class($this);
     $manager_class_name = DevelDumperManager::class;
 
-    return [
+    $aliases = [
       [$class_name, 'dump'],
       [$class_name, 'export'],
       [$manager_class_name, 'dump'],
@@ -81,6 +81,8 @@ abstract class DevelDumperBase extends PluginBase implements DevelDumperInterfac
       'kdevel_print_object',
       'backtrace_error_handler',
     ];
+
+    return $aliases;
   }
 
 }

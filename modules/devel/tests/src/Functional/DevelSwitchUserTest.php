@@ -3,7 +3,6 @@
 namespace Drupal\Tests\devel\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * Tests switch user.
@@ -64,7 +63,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
   /**
    * Tests switch user basic functionality.
    */
-  public function testSwitchUserFunctionality(): void {
+  public function testSwitchUserFunctionality() {
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('');
@@ -115,7 +114,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
   /**
    * Tests the switch user block configuration.
    */
-  public function testSwitchUserBlockConfiguration(): void {
+  public function testSwitchUserBlockConfiguration() {
     $anonymous = \Drupal::config('user.settings')->get('anonymous');
 
     // Create some users for the test.
@@ -159,7 +158,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
   /**
    * Test the user list items.
    */
-  public function testSwitchUserListItems(): void {
+  public function testSwitchUserListItems() {
     $anonymous = \Drupal::config('user.settings')->get('anonymous');
 
     $this->setBlockConfiguration('list_size', 2);
@@ -207,15 +206,10 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
     // @see https://www.drupal.org/project/devel/issues/3114264
     $this->assertSwitchUserListContainsUser($anonymous);
 
-    $roleStorage = \Drupal::entityTypeManager()->getStorage('user_role');
-
     // Ensure that the switch user block works properly even if no roles have
     // the 'switch users' permission associated (special handling for user 1).
-    /** @var array<string, \Drupal\user\RoleInterface> $roles */
-    $roles = $roleStorage->loadMultiple();
-    unset($roles[AccountInterface::ANONYMOUS_ROLE]);
-    $roles = array_filter($roles, fn($role): bool => $role->hasPermission('switch users'));
-    $roleStorage->delete($roles);
+    $roles = user_roles(TRUE, 'switch users');
+    \Drupal::entityTypeManager()->getStorage('user_role')->delete($roles);
 
     $this->drupalGet('');
     $this->assertSwitchUserListCount(2);
@@ -232,7 +226,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
    * @param int $number
    *   The expected number of items.
    */
-  public function assertSwitchUserListCount($number): void {
+  public function assertSwitchUserListCount($number) {
     $result = $this->xpath('//div[@id=:block]//ul/li/a', [':block' => 'block-switch-user']);
     $this->assertCount($number, $result);
   }
@@ -243,7 +237,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
    * @param string $username
    *   The username to check.
    */
-  public function assertSwitchUserListContainsUser($username): void {
+  public function assertSwitchUserListContainsUser($username) {
     $result = $this->xpath('//div[@id=:block]//ul/li/a[normalize-space()=:user]', [':block' => 'block-switch-user', ':user' => $username]);
     $this->assertTrue(count($result) > 0, new FormattableMarkup('User "%user" is included in the switch user list.', ['%user' => $username]));
   }
@@ -254,7 +248,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
    * @param string $username
    *   The username to check.
    */
-  public function assertSwitchUserListNoContainsUser($username): void {
+  public function assertSwitchUserListNoContainsUser($username) {
     $result = $this->xpath('//div[@id=:block]//ul/li/a[normalize-space()=:user]', [':block' => 'block-switch-user', ':user' => $username]);
     $this->assertTrue(count($result) == 0, new FormattableMarkup('User "%user" is not included in the switch user list.', ['%user' => $username]));
   }
@@ -262,7 +256,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
   /**
    * Helper function for verify if the search form is shown.
    */
-  public function assertSwitchUserSearchForm(): void {
+  public function assertSwitchUserSearchForm() {
     $result = $this->xpath('//div[@id=:block]//form[contains(@class, :form)]', [':block' => 'block-switch-user', ':form' => 'devel-switchuser-form']);
     $this->assertTrue(count($result) > 0, 'The search form is shown.');
   }
@@ -270,7 +264,7 @@ class DevelSwitchUserTest extends DevelBrowserTestBase {
   /**
    * Helper function for verify if the search form is not shown.
    */
-  public function assertSwitchUserNoSearchForm(): void {
+  public function assertSwitchUserNoSearchForm() {
     $result = $this->xpath('//div[@id=:block]//form[contains(@class, :form)]', [':block' => 'block-switch-user', ':form' => 'devel-switchuser-form']);
     $this->assertTrue(count($result) == 0, 'The search form is not shown.');
   }

@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Provides methods to assist Devel Generate testing.
@@ -17,7 +17,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 trait DevelGenerateSetupTrait {
 
   use CommentTestTrait;
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Vocabulary for testing generation of terms.
@@ -36,7 +36,7 @@ trait DevelGenerateSetupTrait {
   /**
    * General set-up for all tests.
    */
-  public function setUpData(): void {
+  public function setUpData() {
     // Create user with devel_generate permissions and access to admin/content.
     $admin_user = $this->drupalCreateUser([
       'administer devel_generate',

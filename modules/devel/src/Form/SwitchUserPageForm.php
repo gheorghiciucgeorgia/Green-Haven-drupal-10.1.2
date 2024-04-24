@@ -15,13 +15,17 @@ class SwitchUserPageForm extends FormBase {
 
   /**
    * The FormBuilder object.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
    */
-  protected FormBuilderInterface $formBuilder;
+  protected $formBuilder;
 
   /**
    * A helper for creating the user list form.
+   *
+   * @var Drupal\devel\SwitchUserListHelper
    */
-  protected SwitchUserListHelper $switchUserListHelper;
+  protected $switchUserListHelper;
 
   /**
    * Constructs a new SwitchUserPageForm object.
@@ -39,7 +43,7 @@ class SwitchUserPageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('devel.switch_user_list_helper'),
       $container->get('form_builder'),
@@ -49,17 +53,17 @@ class SwitchUserPageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'devel_switchuser_page_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     if ($accounts = $this->switchUserListHelper->getUsers()) {
       $form['devel_links'] = $this->switchUserListHelper->buildUserList($accounts);
-      $form['devel_form'] = $this->formBuilder->getForm(SwitchUserForm::class);
+      $form['devel_form'] = $this->formBuilder->getForm('\Drupal\devel\Form\SwitchUserForm');
     }
     else {
       $this->messenger->addStatus('There are no user accounts present!');
@@ -71,14 +75,14 @@ class SwitchUserPageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Nothing to do here. This is delegated to devel.switch via http call.
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Nothing to do here. This is delegated to devel.switch via http call.
   }
 

@@ -19,7 +19,7 @@ class DevelQueryDebugTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['devel', 'system', 'user'];
+  public static $modules = ['devel', 'system', 'user'];
 
   /**
    * The user used in test.
@@ -55,7 +55,7 @@ class DevelQueryDebugTest extends KernelTestBase {
   /**
    * Tests devel_query_debug_alter() for select queries.
    */
-  public function testSelectQueryDebugTag(): void {
+  public function testSelectQueryDebugTag() {
     // Clear the messages stack.
     $this->getDrupalMessages();
 
@@ -73,12 +73,7 @@ class DevelQueryDebugTest extends KernelTestBase {
     // permissions. We expect only one status message containing the SQL for
     // the debugged query.
     \Drupal::currentUser()->setAccount($this->develUser);
-    $expected_message = '
-SELECT u.uid AS uid\\n
-FROM\\n
-{users} u
-
-';
+    $expected_message = "SELECT u.uid AS uid\nFROM\n{users} u";
 
     $query = \Drupal::database()->select('users', 'u');
     $query->fields('u', ['uid']);
@@ -98,7 +93,7 @@ FROM\\n
   /**
    * Tests devel_query_debug_alter() for entity queries.
    */
-  public function testEntityQueryDebugTag(): void {
+  public function testEntityQueryDebugTag() {
     // Clear the messages stack.
     $this->getDrupalMessages();
 
@@ -115,12 +110,7 @@ FROM\\n
     // permissions. We expect only one status message containing the SQL for
     // the debugged entity query.
     \Drupal::currentUser()->setAccount($this->develUser);
-    $expected_message = '
-SELECT base_table.uid AS uid, base_table.uid AS base_table_uid\\n
-FROM\\n
-{users} base_table
-
-';
+    $expected_message = "SELECT base_table.uid AS uid, base_table.uid AS base_table_uid\nFROM\n{users} base_table";
 
     $query = \Drupal::entityQuery('user')->accessCheck(FALSE);
     $query->addTag('debug');

@@ -12,7 +12,7 @@ class DevelRouterRebuildTest extends DevelBrowserTestBase {
   /**
    * Test routes rebuild.
    */
-  public function testRouterRebuildConfirmForm(): void {
+  public function testRouterRebuildConfirmForm() {
     // Reset the state flag.
     \Drupal::state()->set('devel_test_route_rebuild', NULL);
 

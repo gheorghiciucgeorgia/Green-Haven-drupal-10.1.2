@@ -4,7 +4,6 @@ namespace Drupal\devel_generate\Routing;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\devel_generate\Form\DevelGenerateForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -15,8 +14,10 @@ class DevelGenerateRoutes implements ContainerInjectionInterface {
 
   /**
    * The manager to be used for instantiating plugins.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
-  protected PluginManagerInterface $develGenerateManager;
+  protected $develGenerateManager;
 
   /**
    * Constructs a new devel_generate route subscriber.
@@ -31,7 +32,7 @@ class DevelGenerateRoutes implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.develgenerate')
     );
@@ -40,7 +41,7 @@ class DevelGenerateRoutes implements ContainerInjectionInterface {
   /**
    * Define routes for all devel_generate plugins.
    */
-  public function routes(): array {
+  public function routes() {
     $devel_generate_plugins = $this->develGenerateManager->getDefinitions();
 
     $routes = [];
@@ -50,7 +51,7 @@ class DevelGenerateRoutes implements ContainerInjectionInterface {
       $routes["devel_generate.$id"] = new Route(
         "admin/config/development/generate/$type_url_str",
         [
-          '_form' => DevelGenerateForm::class,
+          '_form' => '\Drupal\devel_generate\Form\DevelGenerateForm',
           '_title' => "Generate $label",
           '_plugin_id' => $id,
         ],

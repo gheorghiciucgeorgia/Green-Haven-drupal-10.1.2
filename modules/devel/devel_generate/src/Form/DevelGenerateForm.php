@@ -5,12 +5,7 @@ namespace Drupal\devel_generate\Form;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\devel_generate\DevelGenerateBaseInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a form that allows privileged users to generate entities.
@@ -19,73 +14,34 @@ class DevelGenerateForm extends FormBase {
 
   /**
    * The manager to be used for instantiating plugins.
-   */
-  protected PluginManagerInterface $develGenerateManager;
-
-  /**
-   * The messenger.
    *
-   * @var \Drupal\Core\Messenger\MessengerInterface
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
-  protected $messenger;
-
-  /**
-   * Logger service.
-   */
-  protected LoggerInterface $logger;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
+  protected $develGenerateManager;
 
   /**
    * Constructs a new DevelGenerateForm object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $devel_generate_manager
    *   The manager to be used for instantiating plugins.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    */
-  public function __construct(
-    PluginManagerInterface $devel_generate_manager,
-    MessengerInterface $messenger,
-    LoggerInterface $logger,
-    RequestStack $request_stack,
-    TranslationInterface $string_translation
-  ) {
+  public function __construct(PluginManagerInterface $devel_generate_manager) {
     $this->develGenerateManager = $devel_generate_manager;
-    $this->messenger = $messenger;
-    $this->logger = $logger;
-    $this->requestStack = $request_stack;
-    $this->stringTranslation = $string_translation;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.develgenerate'),
-      $container->get('messenger'),
-      $container->get('logger.channel.devel_generate'),
-      $container->get('request_stack'),
-      $container->get('string_translation'),
+      $container->get('plugin.manager.develgenerate')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'devel_generate_form_' . $this->getPluginIdFromRequest();
   }
 
@@ -95,7 +51,7 @@ class DevelGenerateForm extends FormBase {
    * @see \Drupal\devel_generate\Routing\DevelGenerateRouteSubscriber
    */
   protected function getPluginIdFromRequest() {
-    $request = $this->requestStack->getCurrentRequest();
+    $request = $this->getRequest();
     return $request->get('_plugin_id');
   }
 
@@ -108,14 +64,15 @@ class DevelGenerateForm extends FormBase {
    * @return \Drupal\devel_generate\DevelGenerateBaseInterface
    *   A DevelGenerate plugin instance.
    */
-  public function getPluginInstance(string $plugin_id): DevelGenerateBaseInterface {
-    return $this->develGenerateManager->createInstance($plugin_id, []);
+  public function getPluginInstance($plugin_id) {
+    $instance = $this->develGenerateManager->createInstance($plugin_id, []);
+    return $instance;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_id = $this->getPluginIdFromRequest();
     $instance = $this->getPluginInstance($plugin_id);
     $form = $instance->settingsForm($form, $form_state);
@@ -132,7 +89,7 @@ class DevelGenerateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $plugin_id = $this->getPluginIdFromRequest();
     $instance = $this->getPluginInstance($plugin_id);
     $instance->settingsFormValidate($form, $form_state);
@@ -141,15 +98,15 @@ class DevelGenerateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       $plugin_id = $this->getPluginIdFromRequest();
       $instance = $this->getPluginInstance($plugin_id);
       $instance->generate($form_state->getValues());
     }
     catch (\Exception $e) {
-      $this->logger->error($this->t('Failed to generate elements due to "%error".', ['%error' => $e->getMessage()]));
-      $this->messenger->addMessage($this->t('Failed to generate elements due to "%error".', ['%error' => $e->getMessage()]));
+      $this->logger('DevelGenerate', $this->t('Failed to generate elements due to "%error".', ['%error' => $e->getMessage()]));
+      $this->messenger()->addMessage($this->t('Failed to generate elements due to "%error".', ['%error' => $e->getMessage()]));
     }
   }
 

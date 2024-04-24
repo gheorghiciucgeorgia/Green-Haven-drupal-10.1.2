@@ -6,11 +6,8 @@ use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,61 +17,34 @@ class SystemStateEdit extends FormBase {
 
   /**
    * The state store.
-   */
-  protected StateInterface $state;
-
-  /**
-   * The messenger.
    *
-   * @var \Drupal\Core\Messenger\MessengerInterface
+   * @var \Drupal\Core\State\StateInterface
    */
-  protected $messenger;
-
-  /**
-   * Logger service.
-   */
-  protected LoggerInterface $logger;
+  protected $state;
 
   /**
    * Constructs a new SystemStateEdit object.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    */
-  public function __construct(
-    StateInterface $state,
-    MessengerInterface $messenger,
-    LoggerInterface $logger,
-    TranslationInterface $string_translation
-  ) {
+  public function __construct(StateInterface $state) {
     $this->state = $state;
-    $this->messenger = $messenger;
-    $this->logger = $logger;
-    $this->stringTranslation = $string_translation;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('state'),
-      $container->get('messenger'),
-      $container->get('logger.channel.devel'),
-      $container->get('string_translation'),
+      $container->get('state')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'devel_state_system_edit_form';
   }
 
@@ -86,7 +56,7 @@ class SystemStateEdit extends FormBase {
     $old_value = $this->state->get($state_name);
 
     if (!isset($old_value)) {
-      $this->messenger->addWarning($this->t('State @name does not exist in the system.', ['@name' => $state_name]));
+      $this->messenger()->addWarning($this->t('State @name does not exist in the system.', ['@name' => $state_name]));
       return;
     }
 
@@ -94,7 +64,7 @@ class SystemStateEdit extends FormBase {
     $disabled = !$this->checkObject($old_value);
 
     if ($disabled) {
-      $this->messenger->addWarning($this->t('Only simple structures are allowed to be edited. State @name contains objects.', ['@name' => $state_name]));
+      $this->messenger()->addWarning($this->t('Only simple structures are allowed to be edited. State @name contains objects.', ['@name' => $state_name]));
 
     }
 
@@ -114,7 +84,7 @@ class SystemStateEdit extends FormBase {
         $transport = 'yaml';
       }
       catch (InvalidDataTypeException $e) {
-        $this->messenger->addError($this->t('Invalid data detected for @name : %error', ['@name' => $state_name, '%error' => $e->getMessage()]));
+        $this->messenger()->addError($this->t('Invalid data detected for @name : %error', ['@name' => $state_name, '%error' => $e->getMessage()]));
         return;
       }
     }
@@ -158,7 +128,7 @@ class SystemStateEdit extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
 
     if ($values['transport'] == 'yaml') {
@@ -180,14 +150,14 @@ class SystemStateEdit extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save the state.
     $values = $form_state->getValues();
     $this->state->set($values['state_name'], $values['parsed_value']);
 
     $form_state->setRedirectUrl(Url::fromRoute('devel.state_system_page'));
-    $this->messenger->addMessage($this->t('Variable %variable was successfully edited.', ['%variable' => $values['state_name']]));
-    $this->logger->info('Variable %variable was successfully edited.', ['%variable' => $values['state_name']]);
+    $this->messenger()->addMessage($this->t('Variable %variable was successfully edited.', ['%variable' => $values['state_name']]));
+    $this->logger('devel')->info('Variable %variable was successfully edited.', ['%variable' => $values['state_name']]);
   }
 
   /**
@@ -199,7 +169,7 @@ class SystemStateEdit extends FormBase {
    * @return bool
    *   TRUE if the variable is not an object and does not contain one.
    */
-  protected function checkObject(mixed $data): bool {
+  protected function checkObject($data) {
     if (is_object($data)) {
       return FALSE;
     }

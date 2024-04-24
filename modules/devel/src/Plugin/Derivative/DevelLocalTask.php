@@ -21,8 +21,10 @@ class DevelLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected EntityTypeManagerInterface $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
    * Creates an DevelLocalTask object.
@@ -40,10 +42,10 @@ class DevelLocalTask extends DeriverBase implements ContainerDeriverInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, $base_plugin_id): static {
+  public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('string_translation'),
+      $container->get('string_translation')
     );
   }
 

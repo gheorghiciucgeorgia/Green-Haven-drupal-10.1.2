@@ -4,7 +4,7 @@ namespace Drupal\Tests\devel\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Test Load with References.
@@ -13,7 +13,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
  */
 class DevelEntityToArrayTest extends EntityKernelTestBase {
 
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * The entity type used in this test.
@@ -48,7 +48,7 @@ class DevelEntityToArrayTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'devel'];
+  public static $modules = ['entity_test', 'devel'];
 
   /**
    * {@inheritDoc}
@@ -77,7 +77,7 @@ class DevelEntityToArrayTest extends EntityKernelTestBase {
   /**
    * Test method.
    */
-  public function testWithReferences(): void {
+  public function testWithReferences() {
     // Create the parent entity.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)

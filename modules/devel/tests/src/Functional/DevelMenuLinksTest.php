@@ -27,7 +27,7 @@ class DevelMenuLinksTest extends DevelBrowserTestBase {
   /**
    * Tests CSFR protected links.
    */
-  public function testCsrfProtectedLinks(): void {
+  public function testCsrfProtectedLinks() {
     // Ensure CSRF link are not accessible directly.
     $this->drupalGet('devel/run-cron');
     $this->assertSession()->statusCodeEquals(403);
@@ -60,7 +60,7 @@ class DevelMenuLinksTest extends DevelBrowserTestBase {
   /**
    * Tests redirect destination links.
    */
-  public function testRedirectDestinationLinks(): void {
+  public function testRedirectDestinationLinks() {
     // By default, in the testing profile, front page is the user canonical URI.
     // For better testing do not use the default frontpage.
     $url = Url::fromRoute('devel.simple_page');

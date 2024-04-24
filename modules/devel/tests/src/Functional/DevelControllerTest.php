@@ -14,7 +14,7 @@ class DevelControllerTest extends DevelBrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'devel',
     'node',
     'entity_test',
@@ -94,7 +94,7 @@ class DevelControllerTest extends DevelBrowserTestBase {
   /**
    * Tests route generation.
    */
-  public function testRouteGeneration(): void {
+  public function testRouteGeneration() {
     // Test Devel load and render routes for entities with both route
     // definitions.
     $this->drupalGet('entity_test/' . $this->entity->id());

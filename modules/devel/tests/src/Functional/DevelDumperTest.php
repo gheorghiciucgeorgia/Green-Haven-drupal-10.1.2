@@ -14,7 +14,7 @@ class DevelDumperTest extends DevelBrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['devel', 'devel_dumper_test'];
+  public static $modules = ['devel', 'devel_dumper_test'];
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class DevelDumperTest extends DevelBrowserTestBase {
   /**
    * Test dumpers configuration page.
    */
-  public function testDumpersConfiguration(): void {
+  public function testDumpersConfiguration() {
     $this->drupalGet('admin/config/development/devel');
 
     // Ensures that the dumper input is present on the config page.
@@ -42,6 +42,7 @@ class DevelDumperTest extends DevelBrowserTestBase {
     // modules) are present on the config page and that only the available
     // dumpers are selectable.
     $dumpers = [
+      'default' => 'Default',
       'var_dumper' => 'Symfony var-dumper',
       'available_test_dumper' => 'Available test dumper',
       'not_available_test_dumper' => 'Not available test dumper',
@@ -78,7 +79,7 @@ class DevelDumperTest extends DevelBrowserTestBase {
   /**
    * Test variable is dumped in page.
    */
-  public function testDumpersOutput(): void {
+  public function testDumpersOutput() {
     $edit = [
       'dumper' => 'available_test_dumper',
     ];

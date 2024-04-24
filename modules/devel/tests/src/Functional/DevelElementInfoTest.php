@@ -3,9 +3,6 @@
 namespace Drupal\Tests\devel\Functional;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\Core\Render\Element\Button;
-use Drupal\Core\Render\Element\Form;
-use Drupal\Core\Render\Element\Html;
 use Drupal\Core\Url;
 
 /**
@@ -28,7 +25,7 @@ class DevelElementInfoTest extends DevelBrowserTestBase {
   /**
    * Tests element info menu link.
    */
-  public function testElementInfoMenuLink(): void {
+  public function testElementInfoMenuLink() {
     $this->drupalPlaceBlock('system_menu_block:devel');
     // Ensures that the element info link is present on the devel menu and that
     // it points to the correct page.
@@ -42,7 +39,7 @@ class DevelElementInfoTest extends DevelBrowserTestBase {
   /**
    * Tests element list page.
    */
-  public function testElementList(): void {
+  public function testElementList() {
     $this->drupalGet('/devel/elements');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Element Info');
@@ -58,21 +55,23 @@ class DevelElementInfoTest extends DevelBrowserTestBase {
     $this->assertEquals(4, count($headers));
 
     $expected_headers = ['Name', 'Provider', 'Class', 'Operations'];
-    $actual_headers = array_map(fn(NodeElement $element) => $element->getText(), $headers);
+    $actual_headers = array_map(function (NodeElement $element) {
+      return $element->getText();
+    }, $headers);
     $this->assertSame($expected_headers, $actual_headers);
 
     // Tests the presence of some (arbitrarily chosen) elements in the table.
     $expected_elements = [
       'button' => [
-        'class' => Button::class,
+        'class' => 'Drupal\Core\Render\Element\Button',
         'provider' => 'core',
       ],
       'form' => [
-        'class' => Form::class,
+        'class' => 'Drupal\Core\Render\Element\Form',
         'provider' => 'core',
       ],
       'html' => [
-        'class' => Html::class,
+        'class' => 'Drupal\Core\Render\Element\Html',
         'provider' => 'core',
       ],
     ];
@@ -113,7 +112,7 @@ class DevelElementInfoTest extends DevelBrowserTestBase {
   /**
    * Tests element detail page.
    */
-  public function testElementDetail(): void {
+  public function testElementDetail() {
     $element_name = 'button';
 
     // Ensures that the page works as expected.

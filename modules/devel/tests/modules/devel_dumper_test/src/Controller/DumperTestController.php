@@ -15,8 +15,10 @@ class DumperTestController extends ControllerBase {
 
   /**
    * The dumper manager.
+   *
+   * @var \Drupal\devel\DevelDumperManagerInterface
    */
-  protected DevelDumperManagerInterface $dumper;
+  protected $dumper;
 
   /**
    * Constructs a new DumperTestController object.
@@ -31,7 +33,7 @@ class DumperTestController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('devel.dumper')
     );
@@ -43,7 +45,7 @@ class DumperTestController extends ControllerBase {
    * @return array
    *   The render array output.
    */
-  public function dump(): array {
+  public function dump() {
     $this->dumper->dump('Test output');
 
     return [
@@ -57,7 +59,7 @@ class DumperTestController extends ControllerBase {
    * @return array
    *   The render array output.
    */
-  public function message(): array {
+  public function message() {
     $this->dumper->message('Test output');
 
     return [
@@ -71,7 +73,7 @@ class DumperTestController extends ControllerBase {
    * @return array
    *   The render array output.
    */
-  public function debug(): array {
+  public function debug() {
     $this->dumper->debug('Test output');
 
     return [
@@ -85,7 +87,7 @@ class DumperTestController extends ControllerBase {
    * @return array
    *   The render array output.
    */
-  public function export(): array {
+  public function export() {
     return [
       '#markup' => $this->dumper->export('Test output'),
     ];
@@ -97,7 +99,7 @@ class DumperTestController extends ControllerBase {
    * @return array
    *   The render array output.
    */
-  public function exportRenderable(): array {
+  public function exportRenderable() {
     return $this->dumper->exportAsRenderable('Test output');
   }
 

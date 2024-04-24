@@ -2,7 +2,6 @@
 
 namespace Drupal\devel\Form;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -16,38 +15,43 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SettingsForm extends ConfigFormBase {
 
-  protected DevelDumperPluginManagerInterface $dumperManager;
-
   /**
-   * The 'devel.settings' config object.
+   * Devel Dumper Plugin Manager.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\devel\DevelDumperPluginManager
    */
-  protected Config $config;
+  protected $dumperManager;
 
   /**
-   * {@inheritdoc}
+   * Constructs a new SettingsForm object.
+   *
+   * @param \Drupal\devel\DevelDumperPluginManagerInterface $devel_dumper_manager
+   *   Devel Dumper Plugin Manager.
    */
-  public static function create(ContainerInterface $container): static {
-    $instance = parent::create($container);
-    $instance->dumperManager = $container->get('plugin.manager.devel_dumper');
-    $instance->config = $container->get('config.factory')->getEditable('devel.settings');
-    $instance->stringTranslation = $container->get('string_translation');
-
-    return $instance;
+  public function __construct(DevelDumperPluginManagerInterface $devel_dumper_manager) {
+    $this->dumperManager = $devel_dumper_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.devel_dumper')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
     return 'devel_admin_settings_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames(): array {
+  protected function getEditableConfigNames() {
     return [
       'devel.settings',
     ];
@@ -56,19 +60,20 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL): array {
+  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $current_url = Url::createFromRequest($request);
+    $devel_config = $this->config('devel.settings');
 
     $form['page_alter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display $page array'),
-      '#default_value' => $this->config->get('page_alter'),
+      '#default_value' => $devel_config->get('page_alter'),
       '#description' => $this->t('Display $page array from <a href="https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_attachments_alter/8">hook_page_attachments_alter()</a> in the messages area of each page.'),
     ];
     $form['raw_names'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display machine names of permissions and modules'),
-      '#default_value' => $this->config->get('raw_names'),
+      '#default_value' => $devel_config->get('raw_names'),
       '#description' => $this->t('Display the language-independent machine names of the permissions in mouse-over hints on the <a href=":permissions_url">Permissions</a> page and the module base file names on the Permissions and <a href=":modules_url">Modules</a> pages.', [
         ':permissions_url' => Url::fromRoute('user.admin_permissions')->toString(),
         ':modules_url' => Url::fromRoute('system.modules_list')->toString(),
@@ -78,7 +83,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Rebuild the theme registry on every page load'),
       '#description' => $this->t('New templates, theme overrides, and changes to the theme.info.yml need the theme registry to be rebuilt in order to appear on the site.'),
-      '#default_value' => $this->config->get('rebuild_theme'),
+      '#default_value' => $devel_config->get('rebuild_theme'),
     ];
 
     $error_handlers = devel_get_handlers();
@@ -124,7 +129,7 @@ class SettingsForm extends ConfigFormBase {
       $request->query->remove('demo');
     }
 
-    $dumper = $this->config->get('devel_dumper');
+    $dumper = $devel_config->get('devel_dumper');
     $default = $this->dumperManager->isPluginSupported($dumper) ? $dumper : $this->dumperManager->getFallbackPluginId(NULL);
 
     $form['dumper'] = [
@@ -154,12 +159,21 @@ class SettingsForm extends ConfigFormBase {
     }
 
     // Allow custom debug filename for use in DevelDumperManager::debug()
-    $default_file = $this->config->get('debug_logfile') ?: 'temporary://drupal_debug.txt';
+    $default_file = $devel_config->get('debug_logfile') ?: 'temporary://drupal_debug.txt';
     $form['debug_logfile'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Debug Log File'),
       '#description' => $this->t('This is the log file that Devel functions such as ddm() write to. Use temporary:// to represent your systems temporary directory. Save with a blank filename to revert to the default.'),
       '#default_value' => $default_file,
+    ];
+
+    // Specify whether debug file should have <pre> tags around each $dump,
+    // for use in Plugin\Devel\Dumper\DoctrineDebug::export()
+    $form['debug_pre'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Wrap debug in &lt;pre&gt; tags'),
+      '#default_value' => $devel_config->get('debug_pre'),
+      '#description' => $this->t('You may want the debug output wrapped in &lt;pre&gt; tags, depending on your debug file format and how it is displayed.'),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -168,15 +182,16 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $this->config
+    $this->config('devel.settings')
       ->set('page_alter', $values['page_alter'])
       ->set('raw_names', $values['raw_names'])
       ->set('error_handlers', $values['error_handlers'])
       ->set('rebuild_theme', $values['rebuild_theme'])
       ->set('devel_dumper', $values['dumper'])
       ->set('debug_logfile', $values['debug_logfile'] ?: 'temporary://drupal_debug.txt')
+      ->set('debug_pre', $values['debug_pre'])
       ->save();
 
     parent::submitForm($form, $form_state);

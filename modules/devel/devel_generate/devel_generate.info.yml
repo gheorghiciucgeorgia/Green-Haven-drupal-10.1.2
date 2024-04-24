@@ -2,11 +2,11 @@ type: module
 name: 'Devel Generate'
 description: 'Generate test users, nodes, menus, taxonomy terms...'
 package: Development
-core_version_requirement: ">=10.0 <12.0.0-stable"
+core_version_requirement: ^9 || ^10
 tags:
-  - developer
+ - developer
 
-# Information added by Drupal.org packaging script on 2024-03-25
-version: '5.2.1'
+# Information added by Drupal.org packaging script on 2023-08-24
+version: '5.1.2+4-dev'
 project: 'devel'
-datestamp: 1711328414
+datestamp: 1692894808

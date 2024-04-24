@@ -5,9 +5,10 @@ namespace Drupal\devel\Controller;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DrupalKernelInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\devel\DevelDumperManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,17 +16,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides route responses for the container info pages.
  */
-class ContainerInfoController extends ControllerBase {
+class ContainerInfoController extends ControllerBase implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * The drupal kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
    */
-  protected DrupalKernelInterface $kernel;
+  protected $kernel;
 
   /**
    * The dumper manager service.
+   *
+   * @var \Drupal\devel\DevelDumperManagerInterface
    */
-  protected DevelDumperManagerInterface $dumper;
+  protected $dumper;
 
   /**
    * ServiceInfoController constructor.
@@ -34,27 +41,19 @@ class ContainerInfoController extends ControllerBase {
    *   The drupal kernel.
    * @param \Drupal\devel\DevelDumperManagerInterface $dumper
    *   The dumper manager service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    */
-  public function __construct(
-    DrupalKernelInterface $drupalKernel,
-    DevelDumperManagerInterface $dumper,
-    TranslationInterface $string_translation
-  ) {
+  public function __construct(DrupalKernelInterface $drupalKernel, DevelDumperManagerInterface $dumper) {
     $this->kernel = $drupalKernel;
     $this->dumper = $dumper;
-    $this->stringTranslation = $string_translation;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('kernel'),
-      $container->get('devel.dumper'),
-      $container->get('string_translation'),
+      $container->get('devel.dumper')
     );
   }
 
@@ -64,7 +63,7 @@ class ContainerInfoController extends ControllerBase {
    * @return array
    *   A render array as expected by the renderer.
    */
-  public function serviceList(): array {
+  public function serviceList() {
     $headers = [
       $this->t('ID'),
       $this->t('Class'),
@@ -74,8 +73,8 @@ class ContainerInfoController extends ControllerBase {
 
     $rows = [];
 
-    if ($cached_definitions = $this->kernel->getCachedContainerDefinition()) {
-      foreach ($cached_definitions['services'] as $service_id => $definition) {
+    if ($container = $this->kernel->getCachedContainerDefinition()) {
+      foreach ($container['services'] as $service_id => $definition) {
         $service = unserialize($definition);
 
         $row['id'] = [
@@ -87,7 +86,7 @@ class ContainerInfoController extends ControllerBase {
           'filter' => TRUE,
         ];
         $row['alias'] = [
-          'data' => array_search($service_id, $cached_definitions['aliases']) ?: '',
+          'data' => array_search($service_id, $container['aliases']) ?: '',
           'filter' => TRUE,
         ];
         $row['operations']['data'] = [
@@ -143,9 +142,8 @@ class ContainerInfoController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   If the requested service is not defined.
    */
-  public function serviceDetail($service_id): array {
-    $container = $this->kernel->getContainer();
-    $instance = $container->get($service_id, ContainerInterface::NULL_ON_INVALID_REFERENCE);
+  public function serviceDetail($service_id) {
+    $instance = $this->container->get($service_id, ContainerInterface::NULL_ON_INVALID_REFERENCE);
     if ($instance === NULL) {
       throw new NotFoundHttpException();
     }
@@ -178,7 +176,7 @@ class ContainerInfoController extends ControllerBase {
    * @return array
    *   A render array as expected by the renderer.
    */
-  public function parameterList(): array {
+  public function parameterList() {
     $headers = [
       $this->t('Name'),
       $this->t('Operations'),
@@ -186,8 +184,8 @@ class ContainerInfoController extends ControllerBase {
 
     $rows = [];
 
-    if ($cached_definitions = $this->kernel->getCachedContainerDefinition()) {
-      foreach ($cached_definitions['parameters'] as $parameter_name => $definition) {
+    if ($container = $this->kernel->getCachedContainerDefinition()) {
+      foreach ($container['parameters'] as $parameter_name => $definition) {
         $row['name'] = [
           'data' => $parameter_name,
           'filter' => TRUE,
@@ -245,12 +243,11 @@ class ContainerInfoController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   If the requested parameter is not defined.
    */
-  public function parameterDetail($parameter_name): array {
-    $container = $this->kernel->getContainer();
+  public function parameterDetail($parameter_name) {
     try {
-      $parameter = $container->getParameter($parameter_name);
+      $parameter = $this->container->getParameter($parameter_name);
     }
-    catch (ParameterNotFoundException) {
+    catch (ParameterNotFoundException $e) {
       throw new NotFoundHttpException();
     }
 

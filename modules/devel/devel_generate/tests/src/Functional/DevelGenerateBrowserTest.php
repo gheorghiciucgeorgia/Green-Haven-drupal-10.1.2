@@ -19,7 +19,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests generating users.
    */
-  public function testDevelGenerateUsers(): void {
+  public function testDevelGenerateUsers() {
     $this->drupalGet('admin/config/development/generate/user');
     $edit = [
       'num' => 4,
@@ -33,7 +33,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests that if no content types are selected an error message is shown.
    */
-  public function testDevelGenerateContent(): void {
+  public function testDevelGenerateContent() {
     $this->drupalGet('admin/config/development/generate/content');
     $edit = [
       'num' => 4,
@@ -188,7 +188,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests generating terms.
    */
-  public function testDevelGenerateTerms(): void {
+  public function testDevelGenerateTerms() {
     // Generate terms.
     $edit = [
       'vids[]' => $this->vocabulary->id(),
@@ -277,7 +277,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests generating vocabularies.
    */
-  public function testDevelGenerateVocabs(): void {
+  public function testDevelGenerateVocabs() {
     $edit = [
       'num' => 5,
       'title_length' => 12,
@@ -298,7 +298,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
    *   - generating links in existing menus, and then deleting them with kill.
    *   - using specific link_types settings only create those links.
    */
-  public function testDevelGenerateMenus(): void {
+  public function testDevelGenerateMenus() {
     $edit = [
       'num_menus' => 5,
       'num_links' => 7,
@@ -328,7 +328,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests generating media.
    */
-  public function testDevelGenerateMedia(): void {
+  public function testDevelGenerateMedia() {
     // As the 'media' plugin has a dependency on 'media' module, the plugin is
     // not generating a route to the plugin form.
     $this->drupalGet('admin/config/development/generate/media');
@@ -380,7 +380,7 @@ class DevelGenerateBrowserTest extends DevelGenerateBrowserTestBase {
   /**
    * Tests generating content in batch mode.
    */
-  public function testDevelGenerateBatchContent(): void {
+  public function testDevelGenerateBatchContent() {
     // For 50 or more nodes, the processing will be done via batch.
     $edit = [
       'num' => 55,

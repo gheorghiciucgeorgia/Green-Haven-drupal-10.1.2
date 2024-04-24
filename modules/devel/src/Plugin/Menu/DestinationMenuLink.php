@@ -25,7 +25,7 @@ class DestinationMenuLink extends MenuLinkDefault {
    *
    * @todo Make cacheable once https://www.drupal.org/node/2582797 lands.
    */
-  public function getCacheMaxAge(): int {
+  public function getCacheMaxAge() {
     return 0;
   }
 

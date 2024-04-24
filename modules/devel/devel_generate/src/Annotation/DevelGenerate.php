@@ -3,7 +3,6 @@
 namespace Drupal\devel_generate\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a DevelGenerate annotation object.
@@ -22,45 +21,59 @@ class DevelGenerate extends Plugin {
   /**
    * The human-readable name of the DevelGenerate type.
    *
+   * @var \Drupal\Core\Annotation\Translation
+   *
    * @ingroup plugin_translatable
    */
-  public Translation $label;
+  public $label;
 
   /**
    * A short description of the DevelGenerate type.
    *
+   * @var \Drupal\Core\Annotation\Translation
+   *
    * @ingroup plugin_translatable
    */
-  public Translation $description;
+  public $description;
 
   /**
    * A url to access the plugin settings form.
+   *
+   * @var string
    */
-  public string $url;
+  public $url;
 
   /**
    * The permission required to access the plugin settings form.
+   *
+   * @var string
    */
-  public string $permission;
+  public $permission;
 
   /**
    * The name of the DevelGenerate class.
    *
    * This is not provided manually, it will be added by the discovery mechanism.
+   *
+   * @var string
    */
-  public string $class;
+  public $class;
 
   /**
    * An array of settings passed to the DevelGenerate settingsForm.
    *
    * The keys are the names of the settings and the values are the default
    * values for those settings.
+   *
+   * @var array
    */
-  public array $settings = [];
+  public $settings = [];
 
   /**
    * Modules that should be enabled in order to make the plugin discoverable.
+   *
+   * @var array
    */
-  public array $dependencies = [];
+  public $dependencies = [];
 
 }

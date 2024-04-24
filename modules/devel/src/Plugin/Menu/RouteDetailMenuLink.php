@@ -22,7 +22,7 @@ class RouteDetailMenuLink extends MenuLinkDefault {
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge(): int {
+  public function getCacheMaxAge() {
     return 0;
   }
 

@@ -4,24 +4,13 @@ namespace Drupal\paragraphs_tabs_bootstrap\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldFormatter\EntityReferenceRevisionsEntityFormatter;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Plugin implementation of the 'paragraphs_tabs_bootstrap_formatter' formatter.
@@ -36,70 +25,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * )
  */
 class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFormatter {
-
-  /**
-   * Constructor paragraphs tabs widget.
-   *
-   * @param string $plugin_id
-   *   The plugin_id for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Any third party settings.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   The entity display repository.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The render service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   * @param \Drupal\Core\Path\CurrentPathStack $currentPathStack
-   *   The current path service.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selectionManager
-   *   The selection manager service.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityDisplayRepositoryInterface $entity_display_repository, protected EntityTypeManagerInterface $entityTypeManager, protected AccountInterface $currentUser, protected RendererInterface $renderer, protected RequestStack $requestStack, protected ModuleHandlerInterface $moduleHandler, protected CurrentPathStack $currentPathStack, protected SelectionPluginManagerInterface $selectionManager) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $logger_factory, $entity_display_repository);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('logger.factory'),
-      $container->get('entity_display.repository'),
-      $container->get('entity_type.manager'),
-      $container->get('current_user'),
-      $container->get('renderer'),
-      $container->get('request_stack'),
-      $container->get('module_handler'),
-      $container->get('path.current'),
-      $container->get('plugin.manager.entity_reference_selection'),
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -200,13 +125,13 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
     $parentType = $parent->getEntityTypeId();
     $entity_type_id = $this->getFieldSetting('target_type');
     $field_definition = $items->getFieldDefinition();
-    $selectionHandler = $this->selectionManager->getSelectionHandler($field_definition);
+    $selectionHandler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field_definition);
     $bundles = $selectionHandler->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     $field_name = $field_definition->getName();
     $field_label = $field_definition->getLabel();
     $entity = $items->getEntity();
     $entityId = $entity->id();
-    $currentURL = $this->currentPathStack->getPath();
+    $currentURL = \Drupal::service('path.current')->getPath();
     $destination = $currentURL;
     $hasPermission = $this->checkPermissionOperation($entity, $field_name);
     if (!empty($setting['hide_line_operations'])) {
@@ -229,9 +154,9 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
       $btnAttr['type'] = "button";
     }
     $dialog_width = '80%';
-    $storage = $this->entityTypeManager->getStorage('paragraphs_type');
-    $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
-    $title = $handler = '';
+    $storage = \Drupal::entityTypeManager()->getStorage('paragraphs_type');
+    $style = \Drupal::entityTypeManager()->getStorage('image_style')->load('thumbnail');
+
     foreach ($handlers['target_bundles'] as $handler) {
       /** @var \Drupal\paragraphs\Entity\ParagraphsType $paragraphs_type */
       $paragraphs_type = $storage->load($handler);
@@ -249,7 +174,7 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
             '#uri' => $uri,
             '#attributes' => ['class' => ['float-md-start']],
           ];
-          $imgIcon = $this->renderer->render($render);
+          $imgIcon = \Drupal::service('renderer')->render($render);
         }
       }
       $title = $bundles[$handler]['label'];
@@ -344,7 +269,6 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
         return $elements;
       }
       $type = $entity->getType();
-      $bg = 0;
       if (empty($childes[$type])) {
         $childes[$type] = [
           '#type' => 'container',
@@ -355,6 +279,7 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
             'aria-labelledby' => $type . "-tab",
           ],
         ];
+        $bg = 0;
         if ($hasPermission && !empty($btnDropdown[$type])) {
           $childes[$type]['btn_add'] = [
             '#type' => 'link',
@@ -368,7 +293,8 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
           unset($btnDropdown[$type]);
         }
       }
-      $view_builder = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId());
+      $view_builder = \Drupal::entityTypeManager()
+        ->getViewBuilder($entity->getEntityTypeId());
 
       $paragraph_id = $entity->id();
       $childes[$type][$delta] = [
@@ -455,7 +381,8 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
    */
   protected function setActiveTab(&$elements, $field_name) {
     $active_tab = '';
-    $cookie = $this->requestStack->getCurrentRequest()->cookies->get('paragraphs_bootstrap_tabs');
+    $cookie = \Drupal::service('request_stack')
+      ->getCurrentRequest()->cookies->get('paragraphs_bootstrap_tabs');
     if (!empty($cookie)) {
       $active_tabs = Json::decode($cookie);
       if (!empty($active_tabs[$field_name])) {
@@ -486,7 +413,7 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
    */
   public function checkPermissionOperation($entity, $fieldName) {
     $hasPermission = FALSE;
-    $user = $this->currentUser;
+    $user = \Drupal::currentUser();
     $permissions = [
       'bypass node access',
       'administer nodes',
@@ -515,8 +442,8 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
    * Links action.
    */
   protected function paragraphsTabsLinksAction($paragraphsId = FALSE, $destination = '', $paragraphs_type = '') {
-    if (!$this->moduleHandler->moduleExists('paragraphs_table')) {
-      return [];
+    if (!\Drupal::service('module_handler')->moduleExists('paragraphs_table')) {
+      return FALSE;
     }
     $route_params = [
       'paragraph' => $paragraphsId,
@@ -599,7 +526,8 @@ class ParagraphsTabsBootstrapFormatter extends EntityReferenceRevisionsEntityFor
     ];
 
     // Alter row operation.
-    $this->moduleHandler->alter('paragraphs_tabs_operations', $operation, $paragraphsId, $paragraphs_type);
+    \Drupal::moduleHandler()
+      ->alter('paragraphs_tabs_operations', $operation, $paragraphsId, $paragraphs_type);
     return $operation;
   }
 

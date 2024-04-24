@@ -16,7 +16,7 @@ class DevelClientSideFilterTableTest extends UnitTestCase {
   /**
    * @covers ::getInfo
    */
-  public function testGetInfo(): void {
+  public function testGetInfo() {
     $translation = $this->getStringTranslationStub();
 
     $expected_info = [
@@ -34,7 +34,7 @@ class DevelClientSideFilterTableTest extends UnitTestCase {
       ],
     ];
 
-    $table = new ClientSideFilterTable([], 'test', 'test', $translation);
+    $table = new ClientSideFilterTable([], 'test', 'test');
     $table->setStringTranslation($translation);
     $this->assertEquals($expected_info, $table->getInfo());
   }
@@ -43,7 +43,7 @@ class DevelClientSideFilterTableTest extends UnitTestCase {
    * @covers ::preRenderTable
    * @dataProvider providerPreRenderTable
    */
-  public function testPreRenderTable($element, $expected): void {
+  public function testPreRenderTable($element, $expected) {
     $result = ClientSideFilterTable::preRenderTable($element);
     $this->assertEquals($expected, $result);
   }

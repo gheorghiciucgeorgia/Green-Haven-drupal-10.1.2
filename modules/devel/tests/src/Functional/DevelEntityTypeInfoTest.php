@@ -3,8 +3,6 @@
 namespace Drupal\Tests\devel\Functional;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Url;
 
 /**
@@ -27,7 +25,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
   /**
    * Tests entity info menu link.
    */
-  public function testEntityInfoMenuLink(): void {
+  public function testEntityInfoMenuLink() {
     $this->drupalPlaceBlock('system_menu_block:devel');
     // Ensures that the entity type info link is present on the devel menu and
     // that it points to the correct page.
@@ -41,7 +39,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
   /**
    * Tests entity type list page.
    */
-  public function testEntityTypeList(): void {
+  public function testEntityTypeList() {
     $this->drupalGet('/devel/entity/info');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Entity Info');
@@ -57,7 +55,9 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
     $this->assertEquals(5, count($headers));
 
     $expected_headers = ['ID', 'Name', 'Provider', 'Class', 'Operations'];
-    $actual_headers = array_map(fn(NodeElement $element) => $element->getText(), $headers);
+    $actual_headers = array_map(function (NodeElement $element) {
+      return $element->getText();
+    }, $headers);
     $this->assertSame($expected_headers, $actual_headers);
 
     // Tests the presence of some (arbitrarily chosen) entity types in the
@@ -65,7 +65,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
     $expected_types = [
       'date_format' => [
         'name' => 'Date format',
-        'class' => DateFormat::class,
+        'class' => 'Drupal\Core\Datetime\Entity\DateFormat',
         'provider' => 'core',
       ],
       'block' => [
@@ -75,7 +75,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
       ],
       'entity_view_mode' => [
         'name' => 'View mode',
-        'class' => EntityViewMode::class,
+        'class' => 'Drupal\Core\Entity\Entity\EntityViewMode',
         'provider' => 'core',
       ],
     ];
@@ -124,7 +124,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
   /**
    * Tests entity type detail page.
    */
-  public function testEntityTypeDetail(): void {
+  public function testEntityTypeDetail() {
     $entity_type_id = 'date_format';
 
     // Ensures that the page works as expected.
@@ -147,7 +147,7 @@ class DevelEntityTypeInfoTest extends DevelBrowserTestBase {
   /**
    * Tests entity type fields page.
    */
-  public function testEntityTypeFields(): void {
+  public function testEntityTypeFields() {
     $entity_type_id = 'date_format';
 
     // Ensures that the page works as expected.

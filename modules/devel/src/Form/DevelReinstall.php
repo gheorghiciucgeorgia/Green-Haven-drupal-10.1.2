@@ -6,7 +6,6 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,18 +16,24 @@ class DevelReinstall extends FormBase {
 
   /**
    * The module installer.
+   *
+   * @var \Drupal\Core\Extension\ModuleInstallerInterface
    */
-  protected ModuleInstallerInterface $moduleInstaller;
+  protected $moduleInstaller;
 
   /**
    * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
    */
-  protected ModuleExtensionList $moduleExtensionList;
+  protected $moduleExtensionList;
 
   /**
    * The update hook registry service.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
    */
-  protected UpdateHookRegistry $updateHookRegistry;
+  protected $updateHookRegistry;
 
   /**
    * Constructs a new DevelReinstall form.
@@ -39,50 +44,43 @@ class DevelReinstall extends FormBase {
    *   The module extension list.
    * @param \Drupal\Core\Update\UpdateHookRegistry $update_hook_registry
    *   The update hook registry.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    */
-  public function __construct(
-    ModuleInstallerInterface $module_installer,
-    ModuleExtensionList $extension_list_module,
-    UpdateHookRegistry $update_hook_registry,
-    TranslationInterface $string_translation
-  ) {
+  public function __construct(ModuleInstallerInterface $module_installer, ModuleExtensionList $extension_list_module, UpdateHookRegistry $update_hook_registry) {
     $this->moduleInstaller = $module_installer;
     $this->moduleExtensionList = $extension_list_module;
     $this->updateHookRegistry = $update_hook_registry;
-    $this->stringTranslation = $string_translation;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_installer'),
       $container->get('extension.list.module'),
-      $container->get('update.update_hook_registry'),
-      $container->get('string_translation'),
+      $container->get('update.update_hook_registry')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'devel_reinstall_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Get a list of all available modules.
     $modules = $this->moduleExtensionList->reset()->getList();
 
-    $uninstallable = array_filter($modules, fn($module): bool => empty($modules[$module->getName()]->info['required'])
-      && $this->updateHookRegistry->getInstalledVersion($module->getName()) > UpdateHookRegistry::SCHEMA_UNINSTALLED
-      && $module->getName() !== 'devel');
+    $uninstallable = array_filter($modules, function ($module) use ($modules) {
+      return empty($modules[$module->getName()]->info['required'])
+        && $this->updateHookRegistry->getInstalledVersion($module->getName()) > UpdateHookRegistry::SCHEMA_UNINSTALLED
+        && $module->getName() !== 'devel';
+    });
 
     $form['filters'] = [
       '#type' => 'container',
@@ -156,7 +154,7 @@ class DevelReinstall extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state->getValue('reinstall'))) {
       $form_state->setErrorByName('reinstall', $this->t('No modules selected.'));
@@ -166,13 +164,12 @@ class DevelReinstall extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       $modules = $form_state->getValue('reinstall');
       $reinstall = array_keys(array_filter($modules));
       $this->moduleInstaller->uninstall($reinstall, FALSE);
       $this->moduleInstaller->install($reinstall, FALSE);
-      // @todo Revisit usage of DI once https://www.drupal.org/project/drupal/issues/2940148 is resolved.
       $this->messenger()->addMessage($this->t('Uninstalled and installed: %names.', ['%names' => implode(', ', $reinstall)]));
     }
     catch (\Exception $e) {

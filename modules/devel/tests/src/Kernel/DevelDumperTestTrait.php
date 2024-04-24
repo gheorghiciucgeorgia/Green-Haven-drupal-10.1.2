@@ -24,7 +24,7 @@ trait DevelDumperTestTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  public function assertDumpExportEquals($dump, mixed $data, $name = NULL, $message = ''): void {
+  public function assertDumpExportEquals($dump, $data, $name = NULL, $message = '') {
     $output = $this->getDumperExportDump($data, $name);
     $this->assertEquals(rtrim($dump), $output, $message);
   }
@@ -43,7 +43,7 @@ trait DevelDumperTestTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  public function assertContainsDumpExport($haystack, mixed $data, $name = NULL, $message = ''): void {
+  public function assertContainsDumpExport($haystack, $data, $name = NULL, $message = '') {
     // As at 18.04.2020 assertContainsDumpExport() is not actually used in any
     // devel tests in any current code branch.
     $output = $this->getDumperExportDump($data, $name);
@@ -67,7 +67,7 @@ trait DevelDumperTestTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  public function assertDumpEquals($dump, mixed $data, $name = NULL, $message = ''): void {
+  public function assertDumpEquals($dump, $data, $name = NULL, $message = '') {
     $output = $this->getDumperDump($data, $name);
     $this->assertEquals(rtrim($dump), $output, $message);
   }
@@ -86,7 +86,7 @@ trait DevelDumperTestTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  public function assertContainsDump($haystack, mixed $data, $name = NULL, $message = ''): void {
+  public function assertContainsDump($haystack, $data, $name = NULL, $message = '') {
     $output = $this->getDumperDump($data, $name);
     $this->assertStringContainsString($output, (string) $haystack, $message);
   }
@@ -104,7 +104,7 @@ trait DevelDumperTestTrait {
    *
    * @see \Drupal\devel\DevelDumperManager::export()
    */
-  private function getDumperExportDump(mixed $input, $name = NULL): string {
+  private function getDumperExportDump($input, $name = NULL) {
     $output = \Drupal::service('devel.dumper')->export($input, $name);
     return rtrim($output);
   }
@@ -122,7 +122,7 @@ trait DevelDumperTestTrait {
    *
    * @see \Drupal\devel\DevelDumperManager::dump()
    */
-  private function getDumperDump(mixed $input, $name = NULL): string {
+  private function getDumperDump($input, $name = NULL) {
     ob_start();
     \Drupal::service('devel.dumper')->dump($input, $name);
     $output = ob_get_contents();

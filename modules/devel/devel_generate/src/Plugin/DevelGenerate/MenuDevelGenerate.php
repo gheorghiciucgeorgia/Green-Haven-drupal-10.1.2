@@ -4,17 +4,13 @@ namespace Drupal\devel_generate\Plugin\DevelGenerate;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\devel_generate\DevelGenerateBase;
-use Drupal\menu_link_content\MenuLinkContentStorageInterface;
+use Drupal\system\Entity\Menu;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -39,23 +35,38 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
 
   /**
    * The menu tree service.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
    */
-  protected MenuLinkTreeInterface $menuLinkTree;
+  protected $menuLinkTree;
 
   /**
    * The menu storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected EntityStorageInterface $menuStorage;
+  protected $menuStorage;
 
   /**
    * The menu link storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected MenuLinkContentStorageInterface $menuLinkContentStorage;
+  protected $menuLinkContentStorage;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * Database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
-  protected Connection $database;
+  protected $database;
 
   /**
    * Constructs a MenuDevelGenerate object.
@@ -64,63 +75,40 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
    *   The menu tree service.
    * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
    *   The menu storage.
-   * @param \Drupal\menu_link_content\MenuLinkContentStorageInterface $menu_link_content_storage
-   *   The menu link content storage handler.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $menu_link_storage
+   *   The menu storage.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    MessengerInterface $messenger,
-    LanguageManagerInterface $language_manager,
-    ModuleHandlerInterface $module_handler,
-    TranslationInterface $string_translation,
-    MenuLinkTreeInterface $menu_tree,
-    EntityStorageInterface $menu_storage,
-    MenuLinkContentStorageInterface $menu_link_content_storage,
-    Connection $database
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $messenger, $language_manager, $module_handler, $string_translation);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, EntityStorageInterface $menu_storage, EntityStorageInterface $menu_link_storage, ModuleHandlerInterface $module_handler, Connection $database) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
     $this->menuLinkTree = $menu_tree;
     $this->menuStorage = $menu_storage;
-    $this->menuLinkContentStorage = $menu_link_content_storage;
+    $this->menuLinkContentStorage = $menu_link_storage;
+    $this->moduleHandler = $module_handler;
     $this->database = $database;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $entity_type_manager = $container->get('entity_type.manager');
     return new static(
       $configuration, $plugin_id, $plugin_definition,
-      $entity_type_manager,
-      $container->get('messenger'),
-      $container->get('language_manager'),
-      $container->get('module_handler'),
-      $container->get('string_translation'),
       $container->get('menu.link_tree'),
       $entity_type_manager->getStorage('menu'),
       $entity_type_manager->getStorage('menu_link_content'),
+      $container->get('module_handler'),
       $container->get('database')
     );
   }
@@ -128,8 +116,10 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state): array {
-    $menus = array_map(fn($menu) => $menu->label(), $this->menuStorage->loadMultiple());
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $menus = array_map(function ($menu) {
+      return $menu->label();
+    }, Menu::loadMultiple());
     asort($menus);
     $menus = ['__new-menu__' => $this->t('Create new menu(s)')] + $menus;
     $form['existing_menus'] = [
@@ -205,7 +195,7 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function generateElements(array $values): void {
+  public function generateElements(array $values) {
     // If the create new menus checkbox is off, set the number of menus to 0.
     if (!isset($values['existing_menus']['__new-menu__']) || !$values['existing_menus']['__new-menu__']) {
       $values['num_menus'] = 0;
@@ -241,7 +231,7 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function validateDrushParams(array $args, array $options = []): array {
+  public function validateDrushParams(array $args, array $options = []) {
 
     $link_types = ['node', 'front', 'external'];
     $values = [
@@ -254,8 +244,8 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
 
     $max_depth = array_shift($args);
     $max_width = array_shift($args);
-    $values['max_depth'] = $max_depth ?: 3;
-    $values['max_width'] = $max_width ?: 8;
+    $values['max_depth'] = $max_depth ? $max_depth : 3;
+    $values['max_width'] = $max_width ? $max_width : 8;
     $values['title_length'] = $this->getSetting('title_length');
     $values['existing_menus']['__new-menu__'] = TRUE;
 
@@ -278,12 +268,12 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
   /**
    * Deletes custom generated menus.
    */
-  protected function deleteMenus(): array {
+  protected function deleteMenus() {
     if ($this->moduleHandler->moduleExists('menu_ui')) {
       $menu_ids = [];
-      $all = $this->menuStorage->loadMultiple();
+      $all = Menu::loadMultiple();
       foreach ($all as $menu) {
-        if (str_starts_with($menu->id(), 'devel-')) {
+        if (strpos($menu->id(), 'devel-') === 0) {
           $menu_ids[] = $menu->id();
         }
       }
@@ -321,7 +311,7 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
    * @return array
    *   Array containing the generated menus.
    */
-  protected function generateMenus(int $num_menus, int $title_length = 12): array {
+  protected function generateMenus($num_menus, $title_length = 12) {
     $menus = [];
 
     for ($i = 1; $i <= $num_menus; $i++) {
@@ -348,11 +338,8 @@ class MenuDevelGenerate extends DevelGenerateBase implements ContainerFactoryPlu
 
   /**
    * Generates menu links in a tree structure.
-   *
-   * @return array<int|string, string>
-   *   Array containing the titles of the generated menu links.
    */
-  protected function generateLinks(int $num_links, array $menus, int $title_length, array $link_types, int $max_depth, int $max_width): array {
+  protected function generateLinks($num_links, $menus, $title_length, $link_types, $max_depth, $max_width) {
     $links = [];
     $menus = array_keys(array_filter($menus));
     $link_types = array_keys(array_filter($link_types));

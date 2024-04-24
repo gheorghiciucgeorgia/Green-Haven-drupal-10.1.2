@@ -3,10 +3,7 @@
 namespace Drupal\devel\Element;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element\RenderElement;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a render element for filterable table data.
@@ -27,42 +24,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @RenderElement("devel_table_filter")
  */
-class ClientSideFilterTable extends RenderElement implements ContainerFactoryPluginInterface {
-
-  /**
-   * Constructs a new ClientSideFilterTable object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin definition.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
-   */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    TranslationInterface $string_translation
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->stringTranslation = $string_translation;
-  }
-
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration, $plugin_id, $plugin_definition,
-      $container->get('string_translation'),
-    );
-  }
+class ClientSideFilterTable extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
-  public function getInfo(): array {
-    $class = static::class;
+  public function getInfo() {
+    $class = get_class($this);
     return [
       '#filter_label' => $this->t('Search'),
       '#filter_placeholder' => $this->t('Search'),
