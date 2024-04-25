@@ -135,3 +135,7 @@ style-guide:
       dist/bootstrap/5.3.1/site/content/docs/5.3/examples/cheatsheet/cheatsheet.css: {}
   dependencies:
     - bootstrap5/bootstrap5-js-latest
+global-scripts:
+ version: 1.x
+ js:
+    js/carousel.js: {}

@@ -1,0 +1,27 @@
+<div class="video-section">
+  <div class="text">
+    {% if content.field_caption['#items'] is not empty %}
+      <h1 class="caption">{{ content.field_caption }}</h1>
+    {% else %}
+      <h1 style="display:none;">{{ content.field_caption }}</h1>
+    {% endif %}
+    {% if content.field_paragraphs_title['#items'] is not empty %}
+      <h2 class="title">{{ content.field_paragraphs_title }}</h2>
+    {% else %}
+      <h2 style="display:none;">{{ content.field_paragraphs_title }}</h2>
+    {% endif %}
+    {% if content.field_paragraphs_text['#items'] is not empty %}
+      <p class="text-field">{{ content.field_paragraphs_text }}</p>
+    {% else %}
+      <p style="display:none;">{{ content.field_paragraphs_text }}</p>
+    {% endif %}
+  </div>
+  <div class="video">{{ content.field_video }}</div>
+  {% if content.field_link['#items'] is not empty %}
+    <div class="CTA" style="--clr:#39FF14">
+      <span>{{ content.field_link }}</span><i></i>
+    </div>
+  {% else %}
+    <div style="display:none;">{{ content.field_link }}</div>
+  {% endif %}
+</div>
