@@ -12669,6 +12669,17 @@ td > .form-item {
 .container .text .title {
   font-family: "Pacifico", cursive;
   font-size: 20pt;
+  margin-bottom: 15px;
+}
+.container .text button {
+  border-radius: 25px;
+  background-color: #ecca9c;
+  border: 2px solid #39ff14;
+  color: white;
+}
+
+.paragraph-product-listing {
+  margin: 20px;
 }
 
 .navbar .block-search form {

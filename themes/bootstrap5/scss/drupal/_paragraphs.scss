@@ -395,6 +395,18 @@ $neon-green: #39ff14;
     .title{
       font-family: $font-title;
       font-size:20pt;
+      margin-bottom:15px;
+    }
+    button{
+      border-radius: 25px;
+      background-color: $light-beige;
+      border:2px solid $neon-green;
+      color:white;
     }
   }
+}
+
+//product lisitng
+.paragraph-product-listing{
+  margin:20px;
 }
