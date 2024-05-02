@@ -370,3 +370,31 @@ $neon-green: #39ff14;
 .image-paragraph{
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
+
+//history content
+.history-content{
+  width:100%;
+}
+//history content items
+.container {
+  position: relative;
+  color:white;
+  .centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .text{
+    background-color: $forest-green;
+    padding:20px;
+    font-family: $font-text;
+    #more {
+      display: none;
+    }
+    .title{
+      font-family: $font-title;
+      font-size:20pt;
+    }
+  }
+}

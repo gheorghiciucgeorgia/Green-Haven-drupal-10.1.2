@@ -12644,6 +12644,33 @@ td > .form-item {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
+.history-content {
+  width: 100%;
+}
+
+.container {
+  position: relative;
+  color: white;
+}
+.container .centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.container .text {
+  background-color: #2c7865;
+  padding: 20px;
+  font-family: "Comfortaa", sans-serif;
+}
+.container .text #more {
+  display: none;
+}
+.container .text .title {
+  font-family: "Pacifico", cursive;
+  font-size: 20pt;
+}
+
 .navbar .block-search form {
   display: flex;
   flex-direction: column;

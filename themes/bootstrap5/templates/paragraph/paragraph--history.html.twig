@@ -1,0 +1,5 @@
+{% if content.field_history_item['#items'] is not empty %}
+<div class="history-content">{{content.field_history_item}}</div>
+{% else %}
+<div style="display:none;">{{content.field_history_item}}</div>
+{% endif %}

@@ -135,7 +135,20 @@ style-guide:
       dist/bootstrap/5.3.1/site/content/docs/5.3/examples/cheatsheet/cheatsheet.css: {}
   dependencies:
     - bootstrap5/bootstrap5-js-latest
+
 global-scripts:
  version: 1.x
  js:
     js/carousel.js: {}
+    js/history.js: {}
+
+fontawesome:
+ version: 5.12.0
+ css:
+    theme:
+      vendor/fontawesome/css/fontawesome.min.css: {}
+      vendor/fontawesome/css/solid.min.css: {}
+      vendor/fontawesome/css/regular.min.css: {}
+      vendor/fontawesome/css/brands.min.css: {}
+ js:
+    vendor/fontawesome/js/all.min.js: { minified: true, attributes: { defer: true } }

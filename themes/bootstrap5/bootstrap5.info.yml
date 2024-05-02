@@ -13,6 +13,7 @@ libraries:
   - bootstrap5/bootstrap5-js-latest
   - bootstrap5/global-styling
   - bootstrap5/global-scripts
+  - bootstrap5/fontawesome
 
 libraries-extend:
   user/drupal.user:
