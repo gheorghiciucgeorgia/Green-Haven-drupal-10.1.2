@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="img">{{ content.field_image_history }}</div>
+  <div class="centered text">
+    <div class="title">{{ content.field_title_history }}</div>
+    <div class="read-more-section">
+      <div class="text-field">{{ content.field_text_history }}<span id="dots"></span></div>
+      <span id="more" class="description">{{ content.field_description_history }}</span>
+    </div>
+    <button onclick="myFunction()" id="myBtn"><i class="fa-solid fa-plus"></i></button>
+  </div>
+</div>
+
+{{ attach_library('bootstrap5/fontawesome') }}
