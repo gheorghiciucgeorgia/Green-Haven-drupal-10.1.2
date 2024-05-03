@@ -1,63 +1,17 @@
-<img alt="Drupal Logo" src="https://www.drupal.org/files/Wordmark_blue_RGB.png" height="60px">
+<h1>The site was created using <img alt="Drupal Logo" src="https://www.drupal.org/files/Wordmark_blue_RGB.png" height="60px"></h1>
 
-Drupal is an open source content management platform supporting a variety of
-websites ranging from personal weblogs to large community-driven websites. For
-more information, visit the Drupal website, [Drupal.org][Drupal.org], and join
-the [Drupal community][Drupal community].
+<p>The project created to practice drupal and all its modules and functions.</p>
+<h2>The homepage</h2>
+![image](https://github.com/gheorghiciucgeorgia/Green-Haven-drupal-10.1.2/assets/80405885/21fb1f90-1d56-4dea-be6e-cd28365a3d1b)
 
-## Contributing
+<h2>The plants page</h2>
+![image](https://github.com/gheorghiciucgeorgia/Green-Haven-drupal-10.1.2/assets/80405885/ed30e498-2ab5-4be8-a92b-f48e3ff024b1)
+<h2>The about page</h2>
+![image](https://github.com/gheorghiciucgeorgia/Green-Haven-drupal-10.1.2/assets/80405885/ecef39fe-a3d4-4910-97bd-21e1288b1a44)
+<h2>The article page</h2>
+![image](https://github.com/gheorghiciucgeorgia/Green-Haven-drupal-10.1.2/assets/80405885/a6b60a86-3495-40e3-b7c6-06c2c7735f0e)
 
-Drupal is developed on [Drupal.org][Drupal.org], the home of the international
-Drupal community since 2001!
-
-[Drupal.org][Drupal.org] hosts Drupal's [GitLab repository][GitLab repository],
-its [issue queue][issue queue], and its [documentation][documentation]. Before
-you start working on code, be sure to search the [issue queue][issue queue] and
-create an issue if your aren't able to find an existing issue.
-
-Every issue on Drupal.org automatically creates a new community-accessible fork
-that you can contribute to. Learn more about the code contribution process on
-the [Issue forks & merge requests page][issue forks].
-
-## Usage
-
-For a brief introduction, see [USAGE.txt](/core/USAGE.txt). You can also find
-guides, API references, and more by visiting Drupal's [documentation
-page][documentation].
-
-You can quickly extend Drupal's core feature set by installing any of its
-[thousands of free and open source modules][modules]. With Drupal and its
-module ecosystem, you can often build most or all of what your project needs
-before writing a single line of code.
-
-## Changelog
-
-Drupal keeps detailed [change records][changelog]. You can search Drupal's
-changes for a record of every notable breaking change and new feature since
-2011.
-
-## Security
-
-For a list of security announcements, see the [Security advisories
-page][Security advisories] (available as [an RSS feed][security RSS]). This
-page also describes how to subscribe to these announcements via email.
-
-For information about the Drupal security process, or to find out how to report
-a potential security issue to the Drupal security team, see the [Security team
-page][security team].
-
-## Need a helping hand?
-
-Visit the [Support page][support] or browse [over a thousand Drupal
-providers][service providers] offering design, strategy, development, and
-hosting services.
-
-## Legal matters
-
-Know your rights when using Drupal by reading Drupal core's
-[license](/core/LICENSE.txt).
-
-Learn about the [Drupal trademark and logo policy here][trademark].
+<h3>The main purpouse was to edit and customize components for the theme so that it can be used in general and to have an appealing aspect</h3>
 
 [Drupal.org]: https://www.drupal.org
 [Drupal community]: https://www.drupal.org/community
