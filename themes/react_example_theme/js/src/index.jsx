@@ -2,10 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 /* Import Components */
-import DrupalProjectStats from './components/DrupalProjectStats';
+import NodeListOnly from "./components/NodeListOnly";
+import NodeReadWrite from "./components/NodeReadWrite";
 
 const Main = () => (
-  <DrupalProjectStats projectName="drupal" />
+  <NodeReadWrite />
 );
 
 // Get the container for your app.
