@@ -1,0 +1,21 @@
+{% if page.sidebar %}
+<div class="sidebar-grid grid-full">
+  <main role="main" class="site-main">
+    
+    <div id="react-app" class="block">React app will load here.</div>
+    
+    {{ page.content_above }}
+    {{ page.content }}
+  </main>
+
+  {{ page.sidebar }}
+</div>
+{% else %}
+  <main role="main">
+    
+    <div id="react-app" class="block">React app will load here.</div>
+    
+    {{ page.content_above }}
+    {{ page.content }}
+  </main>
+{% endif %}
