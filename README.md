@@ -1,6 +1,7 @@
 <h1>The site was created using <img alt="Drupal Logo" src="https://www.drupal.org/files/Wordmark_blue_RGB.png" height="60px"></h1>
 
 <p>The project created to practice drupal and all its modules and functions.</p>
+<p>This theme's project was created using a base theme bootstrap5</p>
 <h2>The homepage</h2>
 ![image](https://github.com/gheorghiciucgeorgia/Green-Haven-drupal-10.1.2/assets/80405885/21fb1f90-1d56-4dea-be6e-cd28365a3d1b)
 
