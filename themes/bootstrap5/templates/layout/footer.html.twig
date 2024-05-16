@@ -1,7 +1,15 @@
+{# Specifică calea relativă către imagine în fișierele Drupal #}
+{% set image_path = './sites/default/files/Layer 2.png' %}
+
+{# Obține URL-ul complet al imaginii utilizând file_url() #}
+{% set image_url = file_url(image_path) %}
+
 {% if page.footer %}
-	<footer class="mt-auto nav-bar-color">
-		<div class="{{ b5_top_container }}">
-			{{ page.footer }}
-		</div>
-	</footer>
+  <footer class="nav-bar-color d-inline-flex">
+    <img src="{{ image_url }}" alt="Descriere imagine" />
+    <div class="{{ b5_top_container }}">{{ page.footer }}</div>
+    <div class="copyright">
+      <p>&copy; 2024 Green Heaven Inc. All rights reserved</p>
+    </div>
+  </footer>
 {% endif %}

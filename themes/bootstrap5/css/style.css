@@ -12740,6 +12740,25 @@ td > .form-item {
 
 footer {
   padding: 2rem 0;
+  flex-direction: column;
+}
+footer img {
+  width: 2%;
+  margin: auto;
+  margin-bottom: 1%;
+}
+footer .navbar-nav {
+  flex-direction: row;
+  font-family: "Comfortaa", sans-serif;
+  justify-content: center;
+}
+footer .copyright {
+  margin: auto;
+  margin-top: 1%;
+  border-top: 2px solid #d0d0d0;
+  width: 87%;
+  text-align: center;
+  padding: 1%;
 }
 footer.footer-dark a {
   color: #f8f9fa;
@@ -12748,10 +12767,6 @@ footer.footer-dark a {
 footer.footer-dark a:hover {
   color: #f8f9fa;
   text-decoration: none;
-}
-footer .region-footer {
-  display: flex;
-  flex-direction: column;
 }
 
 .region-sidebar-first,

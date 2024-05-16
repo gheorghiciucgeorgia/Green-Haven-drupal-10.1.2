@@ -1,12 +1,25 @@
 footer {
   padding: $footer-padding;
-
+  flex-direction: column;
+  img{
+    width:2%;
+    margin: auto;
+    margin-bottom: 1%;
+  }
+  .navbar-nav {
+    flex-direction: row;
+    font-family: $font-text;
+    justify-content: center;
+  }
+  .copyright{
+    margin: auto;
+    margin-top: 1%;
+    border-top: 2px solid #d0d0d0;
+    width: 87%;
+    text-align: center;
+    padding: 1%;
+  }
   &.footer-dark {
     @include b5-make-link($light, none, $light, none);
-  }
-
-  .region-footer {
-    display: flex;
-    flex-direction: column;
   }
 }
