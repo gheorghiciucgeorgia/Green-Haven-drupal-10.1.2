@@ -13227,6 +13227,11 @@ em.placeholder {
   width: 100%;
 }
 
+#taxonomy-page .region-content {
+  margin: 0;
+  font-family: "Comfortaa", sans-serif;
+}
+
 .alert-dismissible .close {
   color: #000;
 }
