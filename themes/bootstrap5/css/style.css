@@ -13227,9 +13227,40 @@ em.placeholder {
   width: 100%;
 }
 
+/*  id and class from file @page--taxonomy--term--11.html.twig 
+    for changing the margin of the page
+*/
 #taxonomy-page .region-content {
   margin: 0;
+}
+
+/*  classes for the page taxonomy-term--plants.html.twig 
+    for changing the elements whithin the page
+*/
+.taxonomy-plants-containter {
+  position: relative;
+  text-align: center;
+  color: white;
   font-family: "Comfortaa", sans-serif;
+}
+.taxonomy-plants-containter .taxonomy-plants-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.taxonomy-plants-containter .taxonomy-plants-centered .img {
+  width: 32%;
+  margin: auto;
+}
+.taxonomy-plants-containter .taxonomy-plants-centered .taxonomy-plants-caption {
+  font-family: "Pacifico", cursive;
+  font-size: 60pt;
+  margin-top: 10px;
+  margin-bottom: -18px;
+}
+.taxonomy-plants-containter .taxonomy-plants-centered .taxonomy-plants-title {
+  font-size: 35pt;
 }
 
 .alert-dismissible .close {
