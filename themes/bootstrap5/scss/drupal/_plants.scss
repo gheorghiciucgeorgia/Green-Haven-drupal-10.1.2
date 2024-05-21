@@ -1,16 +1,32 @@
-.region-content{
+.region-content {
     margin: 3% 17%;
 }
-.plant-content{
-    display:flex;
-    .plant-image{
+
+.plant-content {
+    display: flex;
+    font-family: $font-text;
+
+    .plant-image {
         width: 100%;
-        margin-right:5%;
-        img{
+        margin-right: 5%;
+
+        img {
             border-radius: 10px;
         }
     }
-    .plant-details{
-        width:100%;
+
+    .plant-details {
+        width: 100%;
+
+        .plant-type {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .plant-content {
+        flex-direction: column;
     }
 }

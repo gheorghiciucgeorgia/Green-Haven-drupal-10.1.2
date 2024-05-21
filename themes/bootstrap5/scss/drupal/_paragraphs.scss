@@ -150,9 +150,14 @@ $neon-green: #39ff14;
     border-radius: 25px;
   }
 
+  .image-mobile {
+    display: none;
+  }
+
   .right {
     margin-right: 0%;
     margin-left: 8%;
+    display: block;
   }
 
   .text {
@@ -415,6 +420,7 @@ $neon-green: #39ff14;
 
   .video {
     margin-top: -4%;
+    width: 100%;
   }
 }
 
@@ -511,6 +517,18 @@ $neon-green: #39ff14;
 }
 
 @media only screen and (max-width: 900px) and (min-width: 600px) {
+  .homepage {
+    .region-content {
+      margin: 20px;
+    }
+  }
+
+  .about {
+    .region-content {
+      margin: 20px;
+    }
+  }
+
   .paragraph-product-listing {
     .field {
       .field__items {
@@ -521,9 +539,70 @@ $neon-green: #39ff14;
       }
     }
   }
+
+  .editorial-content {
+    flex-direction: column;
+
+    .image {
+      margin-bottom: 12px;
+    }
+
+    .image-mobile {
+      display: block;
+    }
+
+    .right {
+      display: none;
+    }
+  }
+
+  .CTA {
+    width: 100%;
+  }
+
+  .slider-item {
+
+    .text {
+
+      .title {
+        font-size: 12pt;
+      }
+
+      .CTA {
+        width: 100%;
+        font-size: 11pt;
+        padding: 4px 2px;
+
+        a {
+          color: white;
+          font-size: 10pt;
+        }
+      }
+    }
+  }
+
+  .video-section {
+    .video {
+      video {
+        width: 100%;
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 600px) and (min-width: 200px) {
+  .about {
+    .region-content {
+      margin: 20px;
+    }
+  }
+
+  .homepage {
+    .region-content {
+      margin: 20px;
+    }
+  }
+
   .paragraph-product-listing {
     .field {
       .field__items {
@@ -531,6 +610,55 @@ $neon-green: #39ff14;
         .field__item {
           flex: 1 1 100%;
         }
+      }
+    }
+  }
+
+  .editorial-content {
+    flex-direction: column;
+
+    .image {
+      margin-bottom: 12px;
+    }
+
+    .image-mobile {
+      display: block;
+    }
+
+    .right {
+      display: none;
+    }
+  }
+
+  .CTA {
+    width: 100%;
+  }
+
+  .slider-item {
+
+    .text {
+
+      .title {
+        font-size: 12pt;
+      }
+
+      .CTA {
+        width: 100%;
+        font-size: 11pt;
+        padding: 4px 2px;
+
+        a {
+          color: white;
+          font-size: 10pt;
+        }
+      }
+    }
+  }
+
+  .video-section {
+    .video {
+      video {
+        width: 100%;
       }
     }
   }

@@ -12405,9 +12405,13 @@ td > .form-item {
   margin-right: 8%;
   border-radius: 25px;
 }
+.editorial-content .image-mobile {
+  display: none;
+}
 .editorial-content .right {
   margin-right: 0%;
   margin-left: 8%;
+  display: block;
 }
 .editorial-content .text {
   display: flex;
@@ -12641,6 +12645,7 @@ td > .form-item {
 }
 .video-section .video {
   margin-top: -4%;
+  width: 100%;
 }
 
 .image-paragraph {
@@ -12719,13 +12724,85 @@ td > .form-item {
 }
 
 @media only screen and (max-width: 900px) and (min-width: 600px) {
+  .homepage .region-content {
+    margin: 20px;
+  }
+  .about .region-content {
+    margin: 20px;
+  }
   .paragraph-product-listing .field .field__items .field__item {
     flex: 1 1 48%;
   }
+  .editorial-content {
+    flex-direction: column;
+  }
+  .editorial-content .image {
+    margin-bottom: 12px;
+  }
+  .editorial-content .image-mobile {
+    display: block;
+  }
+  .editorial-content .right {
+    display: none;
+  }
+  .CTA {
+    width: 100%;
+  }
+  .slider-item .text .title {
+    font-size: 12pt;
+  }
+  .slider-item .text .CTA {
+    width: 100%;
+    font-size: 11pt;
+    padding: 4px 2px;
+  }
+  .slider-item .text .CTA a {
+    color: white;
+    font-size: 10pt;
+  }
+  .video-section .video video {
+    width: 100%;
+  }
 }
 @media only screen and (max-width: 600px) and (min-width: 200px) {
+  .about .region-content {
+    margin: 20px;
+  }
+  .homepage .region-content {
+    margin: 20px;
+  }
   .paragraph-product-listing .field .field__items .field__item {
     flex: 1 1 100%;
+  }
+  .editorial-content {
+    flex-direction: column;
+  }
+  .editorial-content .image {
+    margin-bottom: 12px;
+  }
+  .editorial-content .image-mobile {
+    display: block;
+  }
+  .editorial-content .right {
+    display: none;
+  }
+  .CTA {
+    width: 100%;
+  }
+  .slider-item .text .title {
+    font-size: 12pt;
+  }
+  .slider-item .text .CTA {
+    width: 100%;
+    font-size: 11pt;
+    padding: 4px 2px;
+  }
+  .slider-item .text .CTA a {
+    color: white;
+    font-size: 10pt;
+  }
+  .video-section .video video {
+    width: 100%;
   }
 }
 .navbar .block-search form {
@@ -13261,6 +13338,7 @@ em.placeholder {
 
 .plant-content {
   display: flex;
+  font-family: "Comfortaa", sans-serif;
 }
 .plant-content .plant-image {
   width: 100%;
@@ -13272,7 +13350,16 @@ em.placeholder {
 .plant-content .plant-details {
   width: 100%;
 }
+.plant-content .plant-details .plant-type {
+  margin-top: 20px;
+  font-weight: bold;
+}
 
+@media only screen and (max-width: 900px) {
+  .plant-content {
+    flex-direction: column;
+  }
+}
 /*  id and class from file @page--taxonomy--term--11.html.twig 
     for changing the margin of the page
 */
