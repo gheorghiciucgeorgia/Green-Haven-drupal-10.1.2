@@ -1,1 +1,19 @@
-{{content.field_product}}
+{{ content.field_product }}
+{# Iterează prin elementele din câmpul de referință #}
+{% for item in content.field_product['#items'] %}
+  {# Obține entitatea referențiată #}
+  {% set referenced_entity = item.entity %}
+
+  {# Verifică dacă entitatea există și are un ID valid #}
+  {% if referenced_entity and referenced_entity.id %}
+    {# Obține calea entității #}
+    {% set entity_path = path('entity.node.canonical', { node: referenced_entity.id }) %}
+    {# Construiește URL-ul folosind calea entității #}
+    {% set url = base_path ~ entity_path %}
+    {# Accesează câmpul field_type din entitatea referențiată #}
+    {% set field_type_value = referenced_entity.get('field_type').getValue() %}
+    {% set field_type = field_type_value|first.value %}
+    {# Afisează URL-ul #}
+    <a class="product-name-link" href="{{ url }}">{{ field_type }}</a>
+  {% endif %}
+{% endfor %}

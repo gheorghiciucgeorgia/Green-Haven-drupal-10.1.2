@@ -12536,7 +12536,8 @@ td > .form-item {
 .slideshow-container .mySlides {
   display: none;
 }
-.slideshow-container .prev, .slideshow-container .next {
+.slideshow-container .prev,
+.slideshow-container .next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -12554,7 +12555,8 @@ td > .form-item {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
-.slideshow-container .prev:hover, .slideshow-container .next:hover {
+.slideshow-container .prev:hover,
+.slideshow-container .next:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -12570,7 +12572,8 @@ td > .form-item {
   transition: background-color 0.6s ease;
 }
 
-.active, .media-library-view--widget .view-header a.is-active, .dot:hover {
+.active, .media-library-view--widget .view-header a.is-active,
+.dot:hover {
   background-color: #717171;
 }
 
@@ -12681,7 +12684,50 @@ td > .form-item {
 .paragraph-product-listing {
   margin: 20px;
 }
+.paragraph-product-listing .field .field__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.paragraph-product-listing .field .field__items .field__item {
+  flex: 1 1 23%;
+  box-sizing: border-box;
+  text-align: center;
+}
+.paragraph-product-listing .plant-content {
+  margin: 20px 20px;
+  display: inline-block;
+}
+.paragraph-product-listing .plant-content .plant-details {
+  display: none;
+}
+.paragraph-product-listing .plant-other {
+  display: none;
+}
+.paragraph-product-listing .product-name-link {
+  text-decoration: none;
+  font-family: "Comfortaa", sans-serif;
+  font-weight: 600;
+  color: white;
+  border: 2px solid #2c7865;
+  background-color: #2c7865;
+  padding: 12px;
+  margin: 12px;
+}
+.paragraph-product-listing .product-name-link:hover {
+  border: 4px solid #39ff14;
+}
 
+@media only screen and (max-width: 900px) and (min-width: 600px) {
+  .paragraph-product-listing .field .field__items .field__item {
+    flex: 1 1 48%;
+  }
+}
+@media only screen and (max-width: 600px) and (min-width: 200px) {
+  .paragraph-product-listing .field .field__items .field__item {
+    flex: 1 1 100%;
+  }
+}
 .navbar .block-search form {
   display: flex;
   flex-direction: column;
@@ -13237,32 +13283,71 @@ em.placeholder {
 /*  classes for the page taxonomy-term--plants.html.twig 
     for changing the elements whithin the page
 */
-.taxonomy-plants-containter {
+.taxonomy-plants-header-containter {
   position: relative;
   text-align: center;
   color: white;
   font-family: "Comfortaa", sans-serif;
 }
-.taxonomy-plants-containter .taxonomy-plants-centered {
+.taxonomy-plants-header-containter .taxonomy-plants-centered {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.taxonomy-plants-containter .taxonomy-plants-centered .img {
+.taxonomy-plants-header-containter .taxonomy-plants-centered .img {
   width: 32%;
   margin: auto;
 }
-.taxonomy-plants-containter .taxonomy-plants-centered .taxonomy-plants-caption {
+.taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-caption {
   font-family: "Pacifico", cursive;
   font-size: 60pt;
   margin-top: 10px;
   margin-bottom: -18px;
 }
-.taxonomy-plants-containter .taxonomy-plants-centered .taxonomy-plants-title {
+.taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-title {
   font-size: 35pt;
 }
+.taxonomy-plants-header-containter .taxonomy-plants-image-mobile {
+  display: none;
+}
 
+@media only screen and (max-width: 990px) {
+  .taxonomy-plants-header-containter .taxonomy-plants-image {
+    display: none;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-image-mobile {
+    display: block;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .img {
+    width: 25%;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-caption {
+    font-size: 30pt;
+    margin-bottom: -15px;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-title {
+    font-size: 17.5pt;
+  }
+}
+@media only screen and (max-width: 600px) and (min-width: 200px) {
+  .taxonomy-plants-header-containter .taxonomy-plants-image {
+    display: none;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-image-mobile {
+    display: block;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .img {
+    width: 15%;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-caption {
+    font-size: 18pt;
+    margin-bottom: -5px;
+  }
+  .taxonomy-plants-header-containter .taxonomy-plants-centered .taxonomy-plants-title {
+    font-size: 14pt;
+  }
+}
 .alert-dismissible .close {
   color: #000;
 }

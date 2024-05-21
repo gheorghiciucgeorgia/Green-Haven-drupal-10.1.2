@@ -8,7 +8,7 @@
 /*  classes for the page taxonomy-term--plants.html.twig 
     for changing the elements whithin the page
 */
-.taxonomy-plants-containter {
+.taxonomy-plants-header-containter {
     position: relative;
     text-align: center;
     color: white;
@@ -35,5 +35,68 @@
         .taxonomy-plants-title {
             font-size: 35pt;
         }
+    }
+
+    .taxonomy-plants-image-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 990px) {
+
+    .taxonomy-plants-header-containter {
+        .taxonomy-plants-image {
+            display: none;
+        }
+
+        .taxonomy-plants-image-mobile {
+            display: block;
+        }
+
+        .taxonomy-plants-centered {
+
+            .img {
+                width: 25%;
+            }
+
+            .taxonomy-plants-caption {
+                font-size: 30pt;
+                margin-bottom: -15px;
+            }
+
+            .taxonomy-plants-title {
+                font-size: 17.5pt;
+            }
+        }
+
+    }
+}
+
+@media only screen and (max-width: 600px) and (min-width: 200px) {
+    .taxonomy-plants-header-containter {
+        .taxonomy-plants-image {
+            display: none;
+        }
+
+        .taxonomy-plants-image-mobile {
+            display: block;
+        }
+
+        .taxonomy-plants-centered {
+
+            .img {
+                width: 15%;
+            }
+
+            .taxonomy-plants-caption {
+                font-size: 18pt;
+                margin-bottom: -5px;
+            }
+
+            .taxonomy-plants-title {
+                font-size: 14pt;
+            }
+        }
+
     }
 }

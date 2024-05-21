@@ -1,3 +1,5 @@
-<div class="paragraph-product-listing">
-{{content.field_product_listing_content}}
-</div>
+{% if content.field_product_listing_content['#items'] is not empty %}
+  <div class="paragraph-product-listing">{{ content.field_product_listing_content }}</div>
+{% else %}
+  <div style="display:none;">{{ content.field_product_listing_content }}</div>
+{% endif %}

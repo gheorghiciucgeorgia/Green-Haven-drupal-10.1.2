@@ -1,13 +1,41 @@
 {#
 /**
-* Header for taxonomy
+* Header for taxonomy for plants
 **/
 #}
-<div class="taxonomy-plants-containter">
-  <div class="taxonomy-plants-image">{{ content.field_image }}</div>
+<div class="taxonomy-plants-header-containter">
+  {% if content.field_image['#items'] is not empty %}
+    <div class="taxonomy-plants-image">{{ content.field_image }}</div>
+  {% else %}
+    <div style="display:none;">{{ content.field_image }}</div>
+  {% endif %}
+  {% if content.field_image_mobile['#items'] is not empty %}
+    <div class="taxonomy-plants-image-mobile">{{ content.field_image_mobile }}</div>
+  {% else %}
+    <div style="display:none;">{{ content.field_image_mobile }}</div>
+  {% endif %}
   <div class="taxonomy-plants-centered">
-    <div class="img">{{ content.field_logo }}</div>
-    <h1 class="taxonomy-plants-caption">{{ content.field_caption }}</h1>
-    <h2 class="taxonomy-plants-title">{{ content.field_title }}</h2>
+    {% if content.field_logo['#items'] is not empty %}
+      <div class="img">{{ content.field_logo }}</div>
+    {% else %}
+      <div style="display:none;">{{ content.field_logo }}</div>
+    {% endif %}
+    {% if content.field_caption['#items'] is not empty %}
+      <h1 class="taxonomy-plants-caption">{{ content.field_caption }}</h1>
+    {% else %}
+      <h1 style="display:none;">{{ content.field_caption }}</h1>
+    {% endif %}
+    {% if content.field_title['#items'] is not empty %}
+      <h2 class="taxonomy-plants-title">{{ content.field_title }}</h2>
+    {% else %}
+      <h2 style="display:none;">{{ content.field_title }}</h2>
+    {% endif %}
   </div>
 </div>
+
+{#
+/**
+* Container for plants products
+**/
+#}
+<div class="taxonomy-plants-content">{{ content.field_content }}</div>
